@@ -70,8 +70,9 @@ def split_sections(body: str):
 
 
 def parse_poem(path: Path, grade: str, label: str):
-    raw = io.open(path, encoding="utf-8").read()
-    m = re.match(r"^---\s*\n(.*?)\n---\s*\n(.*)$", raw, re.S)
+    raw = io.open(path, encoding="utf-8-sig").read()  # strip UTF-8 BOM if present
+    raw = raw.replace("\r\n", "\n").replace("\r", "\n")  # normalize line endings
+    m = re.match(r"^---[ \t]*\n(.*?)\n---[ \t]*\n(.*)$", raw, re.S)
     meta, body = ({}, raw)
     if m:
         meta = yaml.safe_load(m.group(1)) or {}

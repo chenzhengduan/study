@@ -193,7 +193,8 @@
 
   /* 筛选分组：小标题 + 全选 chip + 各值 chip */
   function fgroup(label, f, obj) {
-    var keys = Object.keys(obj).sort();
+    var keys = Object.keys(obj).filter(function (k) { return k && k.trim(); }).sort();
+    if (!keys.length) return "";
     var chips = '<button class="chip chip--all" data-f="' + f + '" data-v="">全部</button>' +
       keys.map(function (v) { return '<button class="chip" data-f="' + f + '" data-v="' + esc(v) + '">' + esc(v) + "</button>"; }).join("");
     return '<div class="fgroup"><span class="fgroup__label">' + label + '</span><div class="fgroup__chips">' + chips + "</div></div>";
