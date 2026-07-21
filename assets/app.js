@@ -226,17 +226,33 @@
 
         '<div class="dynbar"><div class="dynbar__track">' + dynSeg + '</div><div class="dynbar__legend">' + dynLegend + "</div></div>" +
 
-        '<div class="filter-panel"><div class="filter-row">' +
+        '<div class="filter-panel">' +
+        '<button class="filter-head" id="fhead"><span class="filter-head__title">筛选</span>' +
+        '<span class="filter-head__summary" id="fsummary">全部</span>' +
+        '<span class="filter-head__chev">▾</span></button>' +
+        '<div class="filter-body" id="fbody"><div class="filter-row">' +
         '<input class="filter-input" id="fq" placeholder="搜题目 / 作者…" value="' + esc(q.q || "") + '"></div>' +
         fgroup("朝代", "dynasty", dyn) +
         fgroup("类型", "type", typ) +
         fgroup("主题", "theme", thm) +
-        "</div>" +
+        "</div></div>" +
         '<p class="result-meta" id="rmeta"></p><div class="poem-list" id="rlist"></div>';
 
       show(html, "search");
 
+      // 折叠（移动端默认收起）
+      var fhead = document.getElementById("fhead"), fbody = document.getElementById("fbody");
+      var isMobile = window.matchMedia("(max-width: 759px)").matches;
+      var panel = fhead.parentElement;
+      panel.classList.toggle("is-open", !isMobile);
+      fhead.addEventListener("click", function () { panel.classList.toggle("is-open"); });
+
       var F = { q: (q.q || ""), dynasty: q.dynasty || "", type: q.type || "", theme: q.theme || "" };
+      function updateSummary() {
+        var on = [];
+        if (F.dynasty) on.push(F.dynasty); if (F.type) on.push(F.type); if (F.theme) on.push(F.theme);
+        document.getElementById("fsummary").textContent = on.length ? on.join(" · ") : "全部";
+      }
       function match(p) {
         if (F.q) { var s = (p.title + " " + p.poet + " " + (p.tags || []).join(" ")).toLowerCase(); if (s.indexOf(F.q.toLowerCase()) < 0) return false; }
         if (F.dynasty && p.dynasty !== F.dynasty) return false;
@@ -256,6 +272,7 @@
             '<span class="tag tag--theme">' + esc(p.theme) + "</span></span></a>";
         }).join("") : '<div class="empty"><span class="empty__icon">⌕</span>没有匹配的篇目，换个条件试试。</div>';
         document.querySelectorAll(".chip").forEach(function (c) { c.classList.toggle("is-on", F[c.getAttribute("data-f")] === c.getAttribute("data-v")); });
+        updateSummary();
       }
       view.querySelectorAll(".chip").forEach(function (c) {
         c.addEventListener("click", function () { var f = c.getAttribute("data-f"), v = c.getAttribute("data-v"); F[f] = (F[f] === v) ? "" : v; draw(); });
@@ -358,16 +375,30 @@
         "</div></div>";
       show(
         '<section class="sec" style="margin-top:0"><div class="sec__head"><div><p class="sec__eyebrow">QUICK FIND</p><h2>查找一首</h2></div><p>全库 ' + list.length + " 篇</p></div>" +
-        '<div class="filter-panel"><div class="filter-row"><input class="filter-input" id="sq" placeholder="诗名 / 诗人 / 关键字…" value="' + esc(q.q || "") + '"></div>' +
+        '<div class="filter-panel">' +
+        '<button class="filter-head" id="fhead"><span class="filter-head__title">筛选</span>' +
+        '<span class="filter-head__summary" id="fsummary">全部</span>' +
+        '<span class="filter-head__chev">▾</span></button>' +
+        '<div class="filter-body" id="fbody"><div class="filter-row"><input class="filter-input" id="sq" placeholder="诗名 / 诗人 / 关键字…" value="' + esc(q.q || "") + '"></div>' +
         gradeGroup +
         fgroup("朝代", "d", dyn) +
         fgroup("类型", "ty", typ) +
         fgroup("主题", "th", thm) +
-        "</div>" +
+        "</div></div>" +
         '<p class="result-meta" id="smeta"></p><div class="poem-list" id="slist"></div></section>',
         "search"
       );
+      var fhead = document.getElementById("fhead");
+      var panel = fhead.parentElement;
+      panel.classList.toggle("is-open", !window.matchMedia("(max-width: 759px)").matches);
+      fhead.addEventListener("click", function () { panel.classList.toggle("is-open"); });
+
       var F = { q: q.q || "", g: q.g || "", d: q.d || "", ty: q.ty || "", th: q.th || "" };
+      function updateSummary() {
+        var on = [];
+        if (F.g) on.push(GRADE_META[F.g].label); if (F.d) on.push(F.d); if (F.ty) on.push(F.ty); if (F.th) on.push(F.th);
+        document.getElementById("fsummary").textContent = on.length ? on.join(" · ") : "全部";
+      }
       function draw() {
         var res = list.filter(function (p) {
           if (F.q) { var s = (p.t + " " + p.p + " " + p.d + " " + p.ty + " " + p.th + " " + p.gl).toLowerCase(); if (s.indexOf(F.q.toLowerCase()) < 0) return false; }
@@ -385,6 +416,7 @@
             '<span class="poem-row__right"><span class="tag tag--type">' + esc(p.ty) + '</span><span class="tag tag--theme">' + esc(p.th) + "</span></span></a>";
         }).join("") : '<div class="empty"><span class="empty__icon">⌕</span>没有找到，换个关键字试试。</div>';
         document.querySelectorAll(".chip").forEach(function (c) { c.classList.toggle("is-on", F[c.getAttribute("data-f")] === c.getAttribute("data-v")); });
+        updateSummary();
       }
       view.querySelectorAll(".chip").forEach(function (c) { c.addEventListener("click", function () { var f = c.getAttribute("data-f"); F[f] = (F[f] === c.getAttribute("data-v")) ? "" : c.getAttribute("data-v"); draw(); }); });
       document.getElementById("sq").addEventListener("input", function () { F.q = this.value.trim(); draw(); });
