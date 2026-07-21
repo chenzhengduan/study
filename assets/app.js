@@ -182,13 +182,90 @@
           '<section class="stat-grid">' + stats + "</section>" +
 
           '<section class="sec"><div class="sec__head"><div><p class="sec__eyebrow">BY GRADE</p><h2>按年级学习</h2></div><p>循序渐进 · 每级有对应篇目</p></div>' +
-          '<div class="grade-grid">' + cards + "</div></section>" +
+          // 移动端：底部弹层选择器；桌面端：仍显示分组卡片
+          '<button type="button" class="grade-sheet-btn" id="grade-sheet-open" aria-haspopup="dialog">' +
+            '<span class="grade-sheet-btn__label">选择年级开始学习</span>' +
+            '<span class="grade-sheet-btn__hint">启蒙 · 小学 · 初中 · 高中</span>' +
+            '<span class="grade-sheet-btn__arrow">›</span>' +
+          '</button>' +
+          '<div class="grade-desktop-wrap"><div class="grade-grid">' + cards + "</div></div></section>" +
 
           '<section class="sec"><div class="sec__head"><div><p class="sec__eyebrow">OVERVIEW</p><h2>各年级篇数</h2></div><p>点击进入对应年级</p></div>' +
           '<div class="bar-chart">' + bars + "</div></section>",
           "home"
         );
+
+        // 移动端底部弹层：选择年级
+        var sheetBtn = document.getElementById("grade-sheet-open");
+        if (sheetBtn) {
+          sheetBtn.addEventListener("click", function () { openGradeSheet(counts); });
+        }
       }).catch(function () { errView("目录加载失败，请检查 data/index.json"); });
+  }
+
+  /* ===== 移动端：年级底部弹层选择器 ===== */
+  function openGradeSheet(counts) {
+    // 已存在则先移除（防重复）
+    var old = document.getElementById("grade-sheet");
+    if (old) old.parentNode.removeChild(old);
+
+    var STAGES = [
+      { name: "启蒙", icon: "🌱", range: [0, 1] },
+      { name: "小学", icon: "📖", range: [1, 7] },
+      { name: "初中", icon: "🎓", range: [7, 8] },
+      { name: "高中", icon: "🏆", range: [8, 9] }
+    ];
+
+    var body = STAGES.map(function (st) {
+      var items = GRADE_ORDER.slice(st.range[0], st.range[1]).map(function (g) {
+        var c = counts[g[0]] || { count: 0 };
+        return '<a class="gsheet-item" href="#/g/' + enc(g[0]) + '">' +
+          '<span class="gsheet-item__badge">' + esc(g[2]) + "</span>" +
+          '<span class="gsheet-item__main"><strong>' + esc(g[1]) + "</strong>" +
+          "<small>" + esc(g[3]) + "</small></span>" +
+          '<span class="gsheet-item__count"><b>' + c.count + "</b> 篇</span>" +
+          "</a>";
+      }).join("");
+      if (!items) return "";
+      return '<div class="gsheet-group"><div class="gsheet-group__head">' +
+        '<span>' + st.icon + "</span><h4>" + st.name + "</h4></div>" + items + "</div>";
+    }).join("");
+
+    var wrap = document.createElement("div");
+    wrap.id = "grade-sheet";
+    wrap.className = "gsheet";
+    wrap.setAttribute("role", "dialog");
+    wrap.setAttribute("aria-modal", "true");
+    wrap.setAttribute("aria-label", "选择年级");
+    wrap.innerHTML =
+      '<div class="gsheet__mask" data-close></div>' +
+      '<div class="gsheet__panel">' +
+        '<div class="gsheet__grip"></div>' +
+        '<div class="gsheet__head"><h3>选择年级</h3>' +
+        '<button type="button" class="gsheet__close" data-close aria-label="关闭">×</button></div>' +
+        '<div class="gsheet__body">' + body + "</div>" +
+      "</div>";
+    document.body.appendChild(wrap);
+    document.body.classList.add("gsheet-open");
+
+    function close() {
+      wrap.classList.remove("is-open");
+      document.body.classList.remove("gsheet-open");
+      setTimeout(function () { if (wrap.parentNode) wrap.parentNode.removeChild(wrap); }, 220);
+      document.removeEventListener("keydown", onKey);
+    }
+    function onKey(e) { if (e.key === "Escape") close(); }
+
+    wrap.addEventListener("click", function (e) {
+      if (e.target.hasAttribute("data-close")) close();
+      // 点击具体年级链接：让默认跳转发生，同时关闭弹层
+      var item = e.target.closest ? e.target.closest(".gsheet-item") : null;
+      if (item) close();
+    });
+    document.addEventListener("keydown", onKey);
+
+    // 触发过渡
+    requestAnimationFrame(function () { wrap.classList.add("is-open"); });
   }
 
   /* 筛选分组：小标题 + 全选 chip + 各值 chip */
