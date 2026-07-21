@@ -173,6 +173,14 @@
       }).catch(function () { errView("目录加载失败，请检查 data/index.json"); });
   }
 
+  /* 筛选分组：小标题 + 全选 chip + 各值 chip */
+  function fgroup(label, f, obj) {
+    var keys = Object.keys(obj).sort();
+    var chips = '<button class="chip chip--all" data-f="' + f + '" data-v="">全部</button>' +
+      keys.map(function (v) { return '<button class="chip" data-f="' + f + '" data-v="' + esc(v) + '">' + esc(v) + "</button>"; }).join("");
+    return '<div class="fgroup"><span class="fgroup__label">' + label + '</span><div class="fgroup__chips">' + chips + "</div></div>";
+  }
+
   /* ===== 年级页 ===== */
   function renderGrade(grade, q) {
     loading();
@@ -180,17 +188,16 @@
       var label = shard.label, poems = shard.poems;
       var dyn = {}, typ = {}, thm = {};
       poems.forEach(function (p) { dyn[p.dynasty] = (dyn[p.dynasty] || 0) + 1; typ[p.type] = 1; thm[p.theme] = 1; });
-      var opts = function (o) { return Object.keys(o).sort(); };
-      var chip = function (f, v, t) { return '<button class="chip" data-f="' + f + '" data-v="' + esc(v) + '">' + esc(t) + "</button>"; };
 
-      // 朝代分布迷你条
+      // 朝代分布迷你条（带色点图例）
       var dynTotal = poems.length || 1;
-      var dynSeg = Object.keys(dyn).sort(function (a, b) { return dyn[b] - dyn[a]; }).map(function (k) {
+      var dynKeys = Object.keys(dyn).sort(function (a, b) { return dyn[b] - dyn[a]; });
+      var dynSeg = dynKeys.map(function (k, i) {
         var pct = (dyn[k] / dynTotal * 100);
-        return '<span class="dynbar__seg" style="width:' + pct + '%" title="' + esc(k) + " " + dyn[k] + '篇"></span>';
+        return '<span class="dynbar__seg c' + (i % 6) + '" style="width:' + pct + '%" title="' + esc(k) + " " + dyn[k] + '篇"></span>';
       }).join("");
-      var dynLegend = Object.keys(dyn).sort(function (a, b) { return dyn[b] - dyn[a]; }).slice(0, 6).map(function (k) {
-        return '<span class="dynbar__key">' + esc(k) + " " + dyn[k] + "</span>";
+      var dynLegend = dynKeys.map(function (k, i) {
+        return '<span class="dynbar__key"><i class="dynbar__dot c' + (i % 6) + '"></i>' + esc(k) + " " + dyn[k] + "</span>";
       }).join("");
 
       var html =
@@ -202,9 +209,9 @@
 
         '<div class="filter-panel"><div class="filter-row">' +
         '<input class="filter-input" id="fq" placeholder="搜题目 / 作者…" value="' + esc(q.q || "") + '"></div>' +
-        '<div class="filter-row">' + chip("dynasty", "", "全部朝代") + opts(dyn).map(function (v) { return chip("dynasty", v, v); }).join("") + "</div>" +
-        '<div class="filter-row">' + chip("type", "", "全部类型") + opts(typ).map(function (v) { return chip("type", v, v); }).join("") + "</div>" +
-        '<div class="filter-row">' + chip("theme", "", "全部主题") + opts(thm).map(function (v) { return chip("theme", v, v); }).join("") + "</div>" +
+        fgroup("朝代", "dynasty", dyn) +
+        fgroup("类型", "type", typ) +
+        fgroup("主题", "theme", thm) +
         "</div>" +
         '<p class="result-meta" id="rmeta"></p><div class="poem-list" id="rlist"></div>';
 
@@ -323,17 +330,20 @@
   function renderSearch(q) {
     loading();
     buildSearchIndex().then(function (list) {
-      var dyn = {}, typ = {}, thm = {};
+      var dyn = {}, typ = {}, thm = {}, grd = {};
       list.forEach(function (p) { dyn[p.d] = 1; typ[p.ty] = 1; thm[p.th] = 1; });
-      var opts = function (o) { return Object.keys(o).sort(); };
-      var chip = function (f, v, t) { return '<button class="chip" data-f="' + f + '" data-v="' + esc(v) + '">' + esc(t) + "</button>"; };
+      GRADE_ORDER.forEach(function (g) { grd[g[0]] = g[1]; });
+      var gradeGroup = '<div class="fgroup"><span class="fgroup__label">年级</span><div class="fgroup__chips">' +
+        '<button class="chip chip--all" data-f="g" data-v="">全部</button>' +
+        GRADE_ORDER.map(function (g) { return '<button class="chip" data-f="g" data-v="' + esc(g[0]) + '">' + esc(g[1]) + "</button>"; }).join("") +
+        "</div></div>";
       show(
         '<section class="sec" style="margin-top:0"><div class="sec__head"><div><p class="sec__eyebrow">QUICK FIND</p><h2>查找一首</h2></div><p>全库 ' + list.length + " 篇</p></div>" +
         '<div class="filter-panel"><div class="filter-row"><input class="filter-input" id="sq" placeholder="诗名 / 诗人 / 关键字…" value="' + esc(q.q || "") + '"></div>' +
-        '<div class="filter-row">' + chip("g", "", "全部年级") + GRADE_ORDER.map(function (g) { return chip("g", g[0], g[1]); }).join("") + "</div>" +
-        '<div class="filter-row">' + chip("d", "", "全部朝代") + opts(dyn).map(function (v) { return chip("d", v, v); }).join("") + "</div>" +
-        '<div class="filter-row">' + chip("ty", "", "全部类型") + opts(typ).map(function (v) { return chip("ty", v, v); }).join("") + "</div>" +
-        '<div class="filter-row">' + chip("th", "", "全部主题") + opts(thm).map(function (v) { return chip("th", v, v); }).join("") + "</div>" +
+        gradeGroup +
+        fgroup("朝代", "d", dyn) +
+        fgroup("类型", "ty", typ) +
+        fgroup("主题", "th", thm) +
         "</div>" +
         '<p class="result-meta" id="smeta"></p><div class="poem-list" id="slist"></div></section>',
         "search"

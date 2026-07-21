@@ -133,6 +133,7 @@ mark { background: rgba(255, 179, 0, .45); color: inherit; border-radius: 2px; p
 .chip {
   border: 1px solid var(--line); background: var(--surface-2); color: var(--ink-2);
   padding: 6px 13px; border-radius: 999px; font-size: 13px; transition: .15s; white-space: nowrap;
+  max-width: 100%; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0;
 }
 .chip:hover { border-color: var(--amber); }
 .chip.is-on { background: var(--grad); border-color: transparent; color: #fff; font-weight: 600; box-shadow: 0 3px 10px rgba(244, 81, 30, .3); }
@@ -259,11 +260,11 @@ mark { background: rgba(255, 179, 0, .45); color: inherit; border-radius: 2px; p
 .dynbar { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 14px 16px; margin-bottom: 16px; }
 .dynbar__track { display: flex; height: 12px; border-radius: 6px; overflow: hidden; background: var(--surface-2); }
 .dynbar__seg { display: block; height: 100%; }
-.dynbar__seg:nth-child(6n+1) { background: #ffb300; } .dynbar__seg:nth-child(6n+2) { background: #ff7043; }
-.dynbar__seg:nth-child(6n+3) { background: #f4511e; } .dynbar__seg:nth-child(6n+4) { background: #ffd54f; }
-.dynbar__seg:nth-child(6n+5) { background: #ff8a65; } .dynbar__seg:nth-child(6n+6) { background: #e65100; }
+.c0 { background: #ffb300; } .c1 { background: #ff7043; } .c2 { background: #f4511e; }
+.c3 { background: #ffd54f; } .c4 { background: #ff8a65; } .c5 { background: #e65100; }
 .dynbar__legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; }
-.dynbar__key { font-size: 12px; color: var(--ink-3); }
+.dynbar__key { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-2); }
+.dynbar__dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
 
 /* ---------- 诗页工具条 ---------- */
 .poem-tools { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 18px 0 4px; }
@@ -283,6 +284,40 @@ mark { background: rgba(255, 179, 0, .45); color: inherit; border-radius: 2px; p
 .poem-body.vertical rt { font-size: 9.5px; }
 .poem-body.vertical::-webkit-scrollbar { height: 8px; }
 .poem-body.vertical::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+
+/* ---------- 筛选分组 ---------- */
+.fgroup { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-top: 1px dashed var(--line); }
+.fgroup:first-of-type { border-top: 0; }
+.fgroup__label { flex-shrink: 0; width: 40px; padding-top: 6px; font-size: 12px; font-weight: 700; color: var(--ink-3); letter-spacing: 1px; }
+.fgroup__chips { display: flex; flex-wrap: wrap; gap: 7px; flex: 1; min-width: 0; }
+.chip--all { font-weight: 600; }
+
+/* ---------- 移动端适配（≤759px） ---------- */
+@media (max-width: 759px) {
+  .view { padding: 14px 12px 32px; }
+  .hero { padding: 26px 18px 30px; border-radius: 16px; }
+  .hero h1 { font-size: 27px; letter-spacing: 1px; }
+  .hero--grade h1 { font-size: 24px; }
+  .hero__desc { font-size: 13.5px; }
+  .grade-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .grade-card { padding: 14px 13px 12px; }
+  .grade-card strong { font-size: 16px; }
+  .grade-card small { font-size: 11px; }
+  .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .filter-panel { padding: 12px 12px 6px; }
+  .chip { padding: 6px 12px; font-size: 12.5px; max-width: 100%; }
+  .poem-row { padding: 11px 12px; gap: 9px; flex-wrap: wrap; }
+  .poem-row__title { font-size: 15px; }
+  .poem-row__right { margin-left: 0; width: 100%; justify-content: flex-start; }
+  .poem-title { font-size: 25px; }
+  .poem-line { font-size: 20px; letter-spacing: 1.5px; }
+  .poem-tools { gap: 6px; }
+  .sec-block__body { padding: 0 14px 14px 26px; font-size: 14px; }
+  .pager { grid-template-columns: 1fr 1fr; }
+  .pager__home { grid-column: 1 / -1; order: -1; padding: 10px; }
+  .bar-row__label { width: 48px; font-size: 12.5px; }
+  .crumbs { font-size: 12px; }
+}
 
 /* ---------- 桌面适配 ---------- */
 @media (min-width: 760px) {
