@@ -16,7 +16,7 @@ hide:
 <section class="poems-hero poems-hero--grade">
   <p class="poems-kicker">GRADE 1</p>
   <h1>一年级古诗</h1>
-  <p>共 12 篇 · 支持筛选</p>
+  <p>共 11 篇 · 支持筛选</p>
 </section>
 
 <section class="poems-section">
@@ -66,21 +66,7 @@ hide:
 
 <script>
 const POEMS_DATA = [
-  {
-    "title": "登鹤雀楼",
-    "poet": "王之涣",
-    "dynasty": "唐",
-    "type": "五言绝句",
-    "theme": "哲理",
-    "grade": "02-一年级",
-    "grade_label": "一年级",
-    "semester": "",
-    "path": "02-一年级/登鹤雀楼/",
-    "tags": [
-      "哲理",
-      "登高"
-    ]
-  },
+
   {
     "title": "咏鹅",
     "poet": "骆宾王",

@@ -1,2 +1,1 @@
-mkdocs-material>=9.5,<10
-mkdocs-awesome-pages-plugin>=2.10,<3
+PyYAML>=6.0
