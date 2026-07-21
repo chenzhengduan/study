@@ -15,7 +15,7 @@ hide:
 <section class="poems-hero">
   <p class="poems-kicker">CLASSICAL POEMS</p>
   <h1>古诗诵读</h1>
-  <p>从幼儿园到小学，一首一页，按年级、诗人、朝代、类型查找，适合手机阅读和背诵。</p>
+   <p>从幼儿园到高中，一首一页，按年级、诗人、朝代、类型查找，适合手机阅读和背诵。</p>
   <div class="poems-badges">
     <span>一首一页</span>
     <span>按年级分级</span>
@@ -36,8 +36,10 @@ hide:
     <a class="poems-grade-card" href="04-三年级/"><span class="poems-grade-card__num">3</span><strong>三年级</strong><small>意境加深 · 七言起步</small></a>
     <a class="poems-grade-card" href="05-四年级/"><span class="poems-grade-card__num">4</span><strong>四年级</strong><small>律诗初识 · 情景交融</small></a>
     <a class="poems-grade-card" href="06-五年级/"><span class="poems-grade-card__num">5</span><strong>五年级</strong><small>长诗与词 · 主题更广</small></a>
-    <a class="poems-grade-card" href="07-六年级/"><span class="poems-grade-card__num">6</span><strong>六年级</strong><small>综合复习 · 小学汇总</small></a>
-  </div>
+     <a class="poems-grade-card" href="07-六年级/"><span class="poems-grade-card__num">6</span><strong>六年级</strong><small>综合复习 · 小学汇总</small></a>
+     <a class="poems-grade-card" href="08-初中/"><span class="poems-grade-card__num">7-9</span><strong>初中</strong><small>课标必背 · 中考篇目</small></a>
+     <a class="poems-grade-card" href="09-高中/"><span class="poems-grade-card__num">10-12</span><strong>高中</strong><small>高考必背 · 名篇荟萃</small></a>
+   </div>
 </section>
 
 <section class="poems-section">
