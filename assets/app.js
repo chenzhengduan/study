@@ -132,13 +132,31 @@
         var counts = {}; idx.grades.forEach(function (g) { counts[g.grade] = g; });
         var maxCount = Math.max.apply(null, idx.grades.map(function (g) { return g.count; }).concat([1]));
 
-        var cards = GRADE_ORDER.map(function (g) {
+        // 学段分组：启蒙 / 小学 / 初中 / 高中
+        var STAGES = [
+          { name: "启蒙", range: [0, 1], icon: "🌱" },
+          { name: "小学", range: [1, 7], icon: "📖" },
+          { name: "初中", range: [7, 8], icon: "🎓" },
+          { name: "高中", range: [8, 9], icon: "🏆" }
+        ];
+        function gradeCard(g) {
           var c = counts[g[0]] || { count: 0, with_body: 0 };
+          var readPct = c.count ? Math.round((c.with_body || 0) / c.count * 100) : 0;
           return '<a class="grade-card" href="#/g/' + enc(g[0]) + '">' +
-            '<span class="grade-card__num">' + esc(g[2]) + '</span>' +
+            '<span class="grade-card__badge">' + esc(g[2]) + "</span>" +
+            '<span class="grade-card__body">' +
             "<strong>" + esc(g[1]) + "</strong>" +
             "<small>" + esc(g[3]) + "</small>" +
-            '<span class="grade-card__count"><b>' + c.count + "</b> 篇</span></a>";
+            '<span class="grade-card__meta"><b>' + c.count + '</b> 篇 · 全文 ' + (c.with_body || 0) + "</span>" +
+            '<span class="grade-card__bar"><i style="width:' + readPct + '%"></i></span>' +
+            "</span></a>";
+        }
+        var cards = STAGES.map(function (st) {
+          var items = GRADE_ORDER.slice(st.range[0], st.range[1]).map(gradeCard).join("");
+          if (!items) return "";
+          return '<div class="stage">' +
+            '<div class="stage__head"><span class="stage__icon">' + st.icon + "</span><h3>" + st.name + "</h3></div>" +
+            '<div class="grade-grid">' + items + "</div></div>";
         }).join("");
 
         var bars = GRADE_ORDER.map(function (g) {

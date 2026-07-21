@@ -110,21 +110,34 @@ mark { background: rgba(255, 179, 0, .45); color: inherit; border-radius: 2px; p
 .sec__head h2 { margin: 0; font-size: 21px; font-weight: 800; }
 .sec__head p { margin: 0; font-size: 13px; color: var(--ink-3); }
 
-/* ---------- 年级卡片 ---------- */
-.grade-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+/* ---------- 学段分组 + 年级卡片 ---------- */
+.stage { margin-bottom: 18px; }
+.stage__head { display: flex; align-items: center; gap: 8px; margin: 0 2px 11px; }
+.stage__icon { font-size: 17px; }
+.stage__head h3 { margin: 0; font-size: 14px; font-weight: 700; color: var(--ink-2); letter-spacing: 1px; }
+.stage__head::after { content: ""; flex: 1; height: 1px; background: var(--line); margin-left: 6px; }
+
+.grade-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
 .grade-card {
-  position: relative; display: flex; flex-direction: column; gap: 3px; padding: 18px 16px 16px;
+  position: relative; display: flex; align-items: center; gap: 14px; padding: 15px 16px;
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md);
   transition: transform .18s, box-shadow .18s, border-color .18s; overflow: hidden;
 }
 .grade-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--grad); opacity: 0; transition: .18s; }
 .grade-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: transparent; }
 .grade-card:hover::before { opacity: 1; }
-.grade-card__num { font-size: 12px; font-weight: 800; color: var(--amber-deep); letter-spacing: 1px; }
-.grade-card strong { font-size: 18px; color: var(--ink); }
-.grade-card small { color: var(--ink-3); font-size: 12px; line-height: 1.4; }
-.grade-card__count { margin-top: 8px; font-size: 11.5px; color: var(--ink-3); }
-.grade-card__count b { color: var(--amber-deep); font-size: 15px; }
+.grade-card__badge {
+  flex-shrink: 0; min-width: 44px; height: 44px; padding: 0 6px; border-radius: 12px;
+  background: var(--grad); color: #fff; font-weight: 800; font-size: 15px;
+  display: grid; place-items: center; box-shadow: 0 4px 12px rgba(244, 81, 30, .3); letter-spacing: .5px;
+}
+.grade-card__body { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.grade-card__body strong { font-size: 17px; color: var(--ink); }
+.grade-card__body small { color: var(--ink-3); font-size: 11.5px; line-height: 1.35; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.grade-card__meta { font-size: 11px; color: var(--ink-3); margin-top: 3px; }
+.grade-card__meta b { color: var(--amber-deep); font-size: 14px; }
+.grade-card__bar { display: block; height: 4px; margin-top: 6px; background: var(--surface-2); border-radius: 2px; overflow: hidden; }
+.grade-card__bar i { display: block; height: 100%; background: var(--grad); border-radius: 2px; }
 
 /* ---------- 查找/筛选 ---------- */
 .filter-panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 14px; margin-bottom: 16px; }
@@ -308,9 +321,10 @@ mark { background: rgba(255, 179, 0, .45); color: inherit; border-radius: 2px; p
   .hero--grade h1 { font-size: 24px; }
   .hero__desc { font-size: 13.5px; }
   .grade-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .grade-card { padding: 14px 13px 12px; }
-  .grade-card strong { font-size: 16px; }
-  .grade-card small { font-size: 11px; }
+  .grade-card { flex-direction: column; align-items: flex-start; gap: 9px; padding: 13px 13px 12px; }
+  .grade-card__badge { min-width: 38px; height: 38px; font-size: 13px; border-radius: 10px; }
+  .grade-card__body strong { font-size: 15.5px; }
+  .grade-card__body small { font-size: 11px; white-space: normal; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
   .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .filter-panel { padding: 12px 12px 6px; }
   .chip { padding: 6px 12px; font-size: 12.5px; max-width: 100%; }
