@@ -147,7 +147,7 @@
             '<span class="grade-card__body">' +
             "<strong>" + esc(g[1]) + "</strong>" +
             "<small>" + esc(g[3]) + "</small>" +
-            '<span class="grade-card__meta"><b>' + c.count + '</b> 篇 · 全文 ' + (c.with_body || 0) + "</span>" +
+            '<span class="grade-card__meta"><b>' + c.count + '</b> 篇<span class="grade-card__full"> · 全文 ' + (c.with_body || 0) + "</span></span>" +
             '<span class="grade-card__bar"><i style="width:' + readPct + '%"></i></span>' +
             "</span></a>";
         }
