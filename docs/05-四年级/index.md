@@ -16,36 +16,350 @@ hide:
 <section class="poems-hero poems-hero--grade">
   <p class="poems-kicker">GRADE 4</p>
   <h1>四年级古诗</h1>
-  <p>律诗初识 · 情景交融</p>
+  <p>共 21 篇 · 支持筛选</p>
 </section>
 
 <section class="poems-section">
   <div class="poems-section-heading">
-    <div><p class="poems-eyebrow">POEMS</p><h2>本年级篇目</h2></div>
-    <p>从顶部搜索框可按诗人、朝代、类型快速筛选。</p>
+    <h2>篇目列表</h2>
+    <p>在下方表格中筛选题目、作者、朝代、类型、主题等。</p>
   </div>
-  <div class="poems-list">
-    <a class="poems-list-item" href="凉州词/"><strong>凉州词</strong><span>唐 · 王翰 · 七言绝句 · 边塞</span></a>
-    <a class="poems-list-item" href="出塞/"><strong>出塞</strong><span>唐 · 王昌龄 · 七言绝句 · 边塞</span></a>
-    <a class="poems-list-item" href="别董大/"><strong>别董大</strong><span>唐 · 高适 · 七言绝句 · 送别</span></a>
-    <a class="poems-list-item" href="卜算子·咏梅/"><strong>卜算子·咏梅</strong><span>近现代 · 毛泽东 · 词 · 咏物</span></a>
-    <a class="poems-list-item" href="四时田园杂兴（其二）/"><strong>四时田园杂兴（其二）</strong><span>宋 · 范成大 · 七言绝句 · 田园</span></a>
-    <a class="poems-list-item" href="塞下曲/"><strong>塞下曲</strong><span>唐 · 卢纶 · 五言绝句 · 边塞</span></a>
-    <a class="poems-list-item" href="墨梅/"><strong>墨梅</strong><span>元 · 王冕 · 七言绝句 · 咏物</span></a>
-    <a class="poems-list-item" href="夏日绝句/"><strong>夏日绝句</strong><span>宋 · 李清照 · 五言绝句 · 爱国</span></a>
-    <a class="poems-list-item" href="嫦娥/"><strong>嫦娥</strong><span>唐 · 李商隐 · 七言绝句 · 咏物</span></a>
-    <a class="poems-list-item" href="宿新市徐公店/"><strong>宿新市徐公店</strong><span>宋 · 杨万里 · 七言绝句 · 春天</span></a>
-    <a class="poems-list-item" href="暮江吟/"><strong>暮江吟</strong><span>唐 · 白居易 · 七言绝句 · 写景</span></a>
-    <a class="poems-list-item" href="浪淘沙/"><strong>浪淘沙</strong><span>唐 · 刘禹锡 · 七言绝句 · 黄河</span></a>
-    <a class="poems-list-item" href="清平乐·村居/"><strong>清平乐·村居</strong><span>宋 · 辛弃疾 · 词 · 田园</span></a>
-    <a class="poems-list-item" href="独坐敬亭山/"><strong>独坐敬亭山</strong><span>唐 · 李白 · 五言绝句 · 山水</span></a>
-    <a class="poems-list-item" href="王戎不取道旁李/"><strong>王戎不取道旁李</strong><span>南朝 · 《世说新语》 · 文言文 · 智慧</span></a>
-    <a class="poems-list-item" href="精卫填海/"><strong>精卫填海</strong><span>先秦 · 《山海经》 · 文言文 · 神话</span></a>
-    <a class="poems-list-item" href="蜂/"><strong>蜂</strong><span>唐 · 罗隐 · 七言绝句 · 咏物</span></a>
-    <a class="poems-list-item" href="雪梅/"><strong>雪梅</strong><span>宋 · 卢梅坡 · 七言绝句 · 咏物</span></a>
-    <a class="poems-list-item" href="题西林壁/"><strong>题西林壁</strong><span>宋 · 苏轼 · 七言绝句 · 哲理</span></a>
-    <a class="poems-list-item" href="鹿柴/"><strong>鹿柴</strong><span>唐 · 王维 · 五言绝句 · 山水</span></a>
+
+  <div id="poems-table-wrapper" data-grade="05-四年级">
+    
+    <div class="poems-filters">
+      <input type="text" class="poem-filter" data-col="0" placeholder="搜题目…">
+      <input type="text" class="poem-filter" data-col="1" placeholder="搜作者…">
+      <input type="text" class="poem-filter" data-col="2" placeholder="朝代">
+      <input type="text" class="poem-filter" data-col="3" placeholder="类型">
+      <input type="text" class="poem-filter" data-col="4" placeholder="主题">
+      <select class="poem-filter" data-col="5">
+        <option value="">全部学期</option>
+        <option value="上">上册</option>
+        <option value="下">下册</option>
+      </select>
+
+    </div>
+    <div class="poems-table-scroll">
+      <table class="poems-table" id="poems-table">
+        <thead>
+          <tr>
+            <th>题目</th>
+            <th>作者</th>
+            <th>朝代</th>
+            <th>类型</th>
+            <th>主题</th>
+            <th>学期</th>
+          </tr>
+        </thead>
+        <tbody id="poems-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="poems-empty" id="poems-empty" style="display:none">
+    <p>没有匹配的篇目，试试调整筛选条件。</p>
   </div>
 </section>
 
 </div>
+
+<script>
+const POEMS_DATA = [
+  {
+    "title": "鹿柴",
+    "poet": "王维",
+    "dynasty": "唐",
+    "type": "五言绝句",
+    "theme": "山水",
+    "grade": "05-四年级",
+    "grade_label": "四年级",
+    "semester": "上",
+    "path": "05-四年级/鹿柴/",
+    "tags": [
+      "山水"
+    ]
+  },
+  {
+    "title": "凉州词",
+    "poet": "王翰",
+    "dynasty": "唐",
+    "type": "七言绝句",
+    "theme": "边塞",
+    "grade": "05-四年级",
+    "grade_label": "四年级",
+    "semester": "上",
+    "path": "05-四年级/凉州词/",
+    "tags": [
+      "边塞"
+    ]
+  },
+  {
+    "title": "别董大",
+    "poet": "高适",
+    "dynasty": "唐",
+    "type": "七言绝句",
+    "theme": "送别",
+    "grade": "05-四年级",
+    "grade_label": "四年级",
+    "semester": "上",
+    "path": "05-四年级/别董大/",
+    "tags": [
+      "送别"
+    ]
+  },
+  {
+    "title": "出塞",
+    "poet": "王昌龄",
+    "dynasty": "唐",
+    "type": "七言绝句",
+    "theme": "边塞",
+    "grade": "05-四年级",
+    "grade_label": "四年级",
+    "semester": "上",
+    "path": "05-四年级/出塞/",
+    "tags": [
+      "边塞"
+    ]
+  },
+  {
+    "title": "题西林壁",
+    "poet": "苏轼",
+    "dynasty": "宋",
+    "type": "七言绝句",
+    "theme": "哲理",
+    "grade": "05-四年级",
+    "grade_label": "四年级",
+    "semester": "上",
+    "path": "05-四年级/题西林壁/",
+    "tags": [
+      "哲理"
+    ]
+  },
+  {
+    "title": "浪淘沙",
+    "poet": "刘禹锡",
+    "dynasty": "唐",
+    "type": "七言绝句",
+    "theme": "黄河",
+    "grade": "05-四年级",
+    "grade_label": "四年级",
+    "semester": "上",
+    "path": "05-四年级/浪淘沙/",
+    "tags": [
+      "黄河"
+    ]
+  },
+  {
+    "title": "夏日绝句",
+    "poet": "李清照",
+    "dynasty": "宋",
+    "type": "五言绝句",
+    "theme": "爱国",
+    "grade": "05-四年级",
+    "grade_label": "四年级",
+    "semester": "上",
+    "path": "05-四年级/夏日绝句/",
+    "tags": [
+      "爱国"
+    ]
+  },
+  {
+    "title": "暮江吟",
+    "poet": "白居易",
+    "dynasty": "唐",
+    "type": "七言绝句",
+    "theme": "写景",
+    "grade": "05-四年级",
+    "grade_label": "四年级",
+    "semester": "上",
+    "path": "05-四年级/暮江吟/",
+    "tags": [
+      "写景"
+    ]
+  },
+  {
+    "title": "嫦娥",
+    "poet": "李商隐",
+    "dynasty": "唐",
+    "type": "七言绝句",
+    "theme": "咏物",
+    "grade": "05-四年级",
+    "grade_label": "四年级",
+    "semester": "上",
+    "path": "05-四年级/嫦娥/",
+    "tags": [
+      "咏物"
+    ]
+  },
+  {
+    "title": "雪梅",
+    "poet": "卢钺",
+    "dynasty": "宋",
+    "type": "七言绝句",
+    "theme": "哲理",
+    "grade": "05-四年级",
+    "grade_label": "四年级",
+    "semester": "上",
+    "path": "05-四年级/雪梅/",
+    "tags": [
+      "哲理"
+    ]
+  },
+  {
+    "title": "精卫填海",
+    "poet": "《山海经》",
+    "dynasty": "先秦",
+    "type": "文言文",
+    "theme": "神话",
+    "grade": "05-四年级",
+    "grade_label": "四年级",
+    "semester": "上",
+    "path": "05-四年级/精卫填海/",
+    "tags": [
+      "神话"
+    ]
+  },
+  {
+    "title": "王戎不取道旁李",
+    "poet": "《世说新语》",
+    "dynasty": "南朝",
+    "type": "文言文",
+    "theme": "智慧",
+    "grade": "05-四年级",
+    "grade_label": "四年级",
+    "semester": "上",
+    "path": "05-四年级/王戎不取道旁李/",
+    "tags": [
+      "智慧"
+    ]
+  },
+  {
+    "title": "宿新市徐公店",
+    "poet": "杨万里",
+    "dynasty": "宋",
+    "type": "七言绝句",
+    "theme": "春天",
+    "grade": "05-四年级",
+    "grade_label": "四年级",
+    "semester": "下",
+    "path": "05-四年级/宿新市徐公店/",
+    "tags": [
+      "春天"
+    ]
+  },
+  {
+    "title": "四时田园杂兴（其二）",
+    "poet": "范成大",
+    "dynasty": "宋",
+    "type": "七言绝句",
+    "theme": "田园",
+    "grade": "05-四年级",
+    "grade_label": "四年级",
+    "semester": "下",
+    "path": "05-四年级/四时田园杂兴(其二)/",
+    "tags": [
+      "田园"
+    ]
+  },
+  {
+    "title": "清平乐·村居",
+    "poet": "辛弃疾",
+    "dynasty": "宋",
+    "type": "词",
+    "theme": "田园",
+    "grade": "05-四年级",
+    "grade_label": "四年级",
+    "semester": "下",
+    "path": "05-四年级/清平乐·村居/",
+    "tags": [
+      "田园"
+    ]
+  },
+  {
+    "title": "塞下曲",
+    "poet": "卢纶",
+    "dynasty": "唐",
+    "type": "五言绝句",
+    "theme": "边塞",
+    "grade": "05-四年级",
+    "grade_label": "四年级",
+    "semester": "下",
+    "path": "05-四年级/塞下曲/",
+    "tags": [
+      "边塞"
+    ]
+  },
+  {
+    "title": "墨梅",
+    "poet": "王冕",
+    "dynasty": "元",
+    "type": "七言绝句",
+    "theme": "咏物",
+    "grade": "05-四年级",
+    "grade_label": "四年级",
+    "semester": "下",
+    "path": "05-四年级/墨梅/",
+    "tags": [
+      "咏物"
+    ]
+  },
+  {
+    "title": "蜂",
+    "poet": "罗隐",
+    "dynasty": "唐",
+    "type": "七言绝句",
+    "theme": "咏物",
+    "grade": "05-四年级",
+    "grade_label": "四年级",
+    "semester": "下",
+    "path": "05-四年级/蜂/",
+    "tags": [
+      "咏物"
+    ]
+  },
+  {
+    "title": "芙蓉楼送辛渐",
+    "poet": "王昌龄",
+    "dynasty": "唐",
+    "type": "七言绝句",
+    "theme": "送别",
+    "grade": "05-四年级",
+    "grade_label": "四年级",
+    "semester": "下",
+    "path": "05-四年级/芙蓉楼送辛渐/",
+    "tags": [
+      "送别"
+    ]
+  },
+  {
+    "title": "独坐敬亭山",
+    "poet": "李白",
+    "dynasty": "唐",
+    "type": "五言绝句",
+    "theme": "山水",
+    "grade": "05-四年级",
+    "grade_label": "四年级",
+    "semester": "下",
+    "path": "05-四年级/独坐敬亭山/",
+    "tags": [
+      "山水"
+    ]
+  },
+  {
+    "title": "卜算子·咏梅",
+    "poet": "毛泽东",
+    "dynasty": "近现代",
+    "type": "词",
+    "theme": "咏物",
+    "grade": "05-四年级",
+    "grade_label": "四年级",
+    "semester": "下",
+    "path": "05-四年级/卜算子·咏梅/",
+    "tags": [
+      "咏物"
+    ]
+  }
+];
+</script>
+<script src="../../assets/scripts/poems-filter.js"></script>
