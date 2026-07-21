@@ -264,12 +264,13 @@
         var list = poems.filter(match);
         document.getElementById("rmeta").textContent = "共 " + list.length + " 篇";
         document.getElementById("rlist").innerHTML = list.length ? list.map(function (p) {
+          var sub = [p.dynasty, p.poet].filter(function (s) { return s && s.trim(); }).join(" · ");
           return '<a class="poem-row" href="#/p/' + enc(grade) + "/" + enc(p.title) + '">' +
-            '<span><span class="poem-row__title">' + esc(p.title) + '</span>' +
-            '<span class="poem-row__sub">' + esc(p.dynasty) + " · " + esc(p.poet) + "</span></span>" +
+            '<span class="poem-row__main"><span class="poem-row__title">' + esc(p.title) + '</span>' +
+            (sub ? '<span class="poem-row__sub">' + esc(sub) + "</span>" : "") + "</span>" +
             '<span class="poem-row__right">' +
-            '<span class="tag tag--type">' + esc(p.type) + "</span>" +
-            '<span class="tag tag--theme">' + esc(p.theme) + "</span></span></a>";
+            (p.type ? '<span class="tag tag--type">' + esc(p.type) + "</span>" : "") +
+            (p.theme ? '<span class="tag tag--theme">' + esc(p.theme) + "</span>" : "") + "</span></a>";
         }).join("") : '<div class="empty"><span class="empty__icon">⌕</span>没有匹配的篇目，换个条件试试。</div>';
         document.querySelectorAll(".chip").forEach(function (c) { c.classList.toggle("is-on", F[c.getAttribute("data-f")] === c.getAttribute("data-v")); });
         updateSummary();
@@ -315,7 +316,7 @@
         '<div class="poem-tools">' +
         toolBtn("py-toggle", "拼音", state.pinyin) +
         toolBtn("vert-toggle", "竖排", state.vertical) +
-        '<div class="font-ctl"><button id="font-dec" aria-label="减小字号">A−</button><span id="font-val">' + state.fontSize + '</span><button id="font-inc" aria-label="增大字号">A+</button></div>' +
+        '<div class="font-ctl" title="调整正文字号"><span class="font-ctl__label">字号</span><button id="font-dec" aria-label="减小字号">−</button><span id="font-val">' + state.fontSize + '</span><button id="font-inc" aria-label="增大字号">+</button></div>' +
         "</div>" : "";
       function toolBtn(id, label, on) { return '<button class="toggle' + (on ? " is-on" : "") + '" id="' + id + '"><span class="dot"></span>' + label + "</button>"; }
 
@@ -325,10 +326,10 @@
         '<h1 class="poem-title">' + esc(p.title) + "</h1>" +
         '<p class="poem-poet"><b>' + esc(p.dynasty) + "</b> · " + esc(p.poet) + "</p>" +
         '<div class="poem-tags">' +
-        '<span class="tag tag--dynasty">' + esc(p.dynasty) + "</span>" +
-        '<span class="tag tag--type">' + esc(p.type) + "</span>" +
-        '<span class="tag tag--theme">' + esc(p.theme) + "</span>" +
-        (p.tags || []).map(function (t) { return '<span class="tag">' + esc(t) + "</span>"; }).join("") +
+        (p.dynasty ? '<span class="tag tag--dynasty">' + esc(p.dynasty) + "</span>" : "") +
+        (p.type ? '<span class="tag tag--type">' + esc(p.type) + "</span>" : "") +
+        (p.theme ? '<span class="tag tag--theme">' + esc(p.theme) + "</span>" : "") +
+        (p.tags || []).filter(function (t) { return t && t.trim(); }).map(function (t) { return '<span class="tag">' + esc(t) + "</span>"; }).join("") +
         "</div>" + tools +
         '<div class="poem-body' + (state.pinyin ? " show-pinyin" : "") + (state.vertical ? " vertical" : "") + '" id="poem-body" style="font-size:' + state.fontSize + 'px">' + bodyHtml + "</div>" +
         "</article>" + secs + pager,
@@ -410,10 +411,13 @@
         });
         document.getElementById("smeta").textContent = "共 " + res.length + " 篇";
         document.getElementById("slist").innerHTML = res.length ? res.slice(0, 400).map(function (p) {
+          var ssub = [p.d, p.p, p.gl].filter(function (s) { return s && s.trim(); }).join(" · ");
           return '<a class="poem-row" href="#/p/' + enc(p.g) + "/" + enc(p.t) + '">' +
-            '<span><span class="poem-row__title">' + esc(p.t) + '</span>' +
-            '<span class="poem-row__sub">' + esc(p.d) + " · " + esc(p.p) + " · " + esc(p.gl) + "</span></span>" +
-            '<span class="poem-row__right"><span class="tag tag--type">' + esc(p.ty) + '</span><span class="tag tag--theme">' + esc(p.th) + "</span></span></a>";
+            '<span class="poem-row__main"><span class="poem-row__title">' + esc(p.t) + '</span>' +
+            (ssub ? '<span class="poem-row__sub">' + esc(ssub) + "</span>" : "") + "</span>" +
+            '<span class="poem-row__right">' +
+            (p.ty ? '<span class="tag tag--type">' + esc(p.ty) + "</span>" : "") +
+            (p.th ? '<span class="tag tag--theme">' + esc(p.th) + "</span>" : "") + "</span></a>";
         }).join("") : '<div class="empty"><span class="empty__icon">⌕</span>没有找到，换个关键字试试。</div>';
         document.querySelectorAll(".chip").forEach(function (c) { c.classList.toggle("is-on", F[c.getAttribute("data-f")] === c.getAttribute("data-v")); });
         updateSummary();
