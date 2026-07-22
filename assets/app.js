@@ -389,6 +389,16 @@
         (next ? '<a class="pager__btn pager__next" href="#/p/' + enc(grade) + "/" + enc(next.title) + '"><span class="pager__label">下一首 ›</span><span class="pager__name">' + esc(next.title) + "</span></a>" : "<span></span>") +
         "</div>";
 
+      // 固定悬浮小导航
+      var floatNav = "";
+      if (prev || next) {
+        floatNav = '<nav class="float-nav" aria-label="上下首快速导航">' +
+          (prev ? '<a class="float-nav__btn float-nav__prev" href="#/p/' + enc(grade) + "/" + enc(prev.title) + '" title="上一首：' + esc(prev.title) + '"><span class="float-nav__arrow">‹</span><span class="float-nav__txt">上一首</span></a>' : '<span class="float-nav__btn is-empty"></span>') +
+          '<a class="float-nav__home" href="#/g/' + enc(grade) + '" title="' + esc(shard.label) + '目录"><span class="float-nav__dot">≡</span></a>' +
+          (next ? '<a class="float-nav__btn float-nav__next" href="#/p/' + enc(grade) + "/" + enc(next.title) + '" title="下一首：' + esc(next.title) + '"><span class="float-nav__txt">下一首</span><span class="float-nav__arrow">›</span></a>' : '<span class="float-nav__btn is-empty"></span>') +
+          "</nav>";
+      }
+
       var tools = p.lines.length ?
         '<div class="poem-tools">' +
         toolBtn("py-toggle", "拼音", state.pinyin) +
@@ -413,6 +423,12 @@
         ""
       );
       document.title = p.title + " - " + p.poet + " - 古诗诵读";
+
+      // 插入固定悬浮小导航
+      if (floatNav) {
+        var viewEl = document.getElementById("view");
+        if (viewEl) viewEl.insertAdjacentHTML("beforeend", floatNav);
+      }
 
       var body = document.getElementById("poem-body");
       function bindToggle(id, key, cls) {
