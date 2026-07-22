@@ -505,33 +505,10 @@
       });
 
       /* 注释气泡：点击诗中标注词弹出解释 */
-      var annotPop = document.getElementById("annot-pop");
-      if (!annotPop) {
-        annotPop = document.createElement("div");
-        annotPop.id = "annot-pop";
-        annotPop.className = "annot-pop";
-        annotPop.setAttribute("role", "tooltip");
-        document.body.appendChild(annotPop);
-        annotPop.addEventListener("click", function () { annotPop.classList.remove("is-show"); });
-        document.addEventListener("click", function (e) {
-          if (!e.target.closest || !e.target.closest(".annot")) annotPop.classList.remove("is-show");
-        });
-      }
       body.querySelectorAll(".annot").forEach(function (el) {
         el.addEventListener("click", function (e) {
           e.stopPropagation();
-          var term = el.getAttribute("data-term") || "";
-          var explain = el.getAttribute("data-explain") || "";
-          annotPop.innerHTML = '<span class="annot-pop__term">' + esc(term) + "</span>" +
-            '<span class="annot-pop__body">' + esc(explain) + "</span>";
-          annotPop.classList.add("is-show");
-          var r = el.getBoundingClientRect();
-          var popW = annotPop.offsetWidth, popH = annotPop.offsetHeight;
-          var left = Math.max(8, Math.min(r.left + r.width / 2 - popW / 2, window.innerWidth - popW - 8));
-          var top = r.top - popH - 10;
-          if (top < 8) top = r.bottom + 10; /* 上方放不下则放下方 */
-          annotPop.style.left = left + "px";
-          annotPop.style.top = top + window.scrollY + "px";
+          showAnnotPop(el);
         });
       });
     }).catch(function () { errView("诗文加载失败"); });
@@ -635,6 +612,37 @@
     if (e.key === "Escape") { sPop.hidden = true; this.blur(); }
   });
   document.addEventListener("click", function (e) { if (!sPop.contains(e.target) && e.target !== sInput) sPop.hidden = true; });
+
+  /* ---------- 注释气泡（全局单例） ---------- */
+  var annotPop = document.createElement("div");
+  annotPop.id = "annot-pop";
+  annotPop.className = "annot-pop";
+  annotPop.setAttribute("role", "tooltip");
+  document.body.appendChild(annotPop);
+  function hideAnnotPop() { annotPop.classList.remove("is-show"); }
+  function showAnnotPop(el) {
+    var term = el.getAttribute("data-term") || "";
+    var explain = el.getAttribute("data-explain") || "";
+    annotPop.innerHTML = '<span class="annot-pop__term">' + esc(term) + "</span>" +
+      '<span class="annot-pop__body">' + esc(explain) + "</span>";
+    annotPop.classList.add("is-show");
+    var r = el.getBoundingClientRect();
+    var popW = annotPop.offsetWidth, popH = annotPop.offsetHeight;
+    var left = Math.max(8, Math.min(r.left + r.width / 2 - popW / 2, window.innerWidth - popW - 8));
+    var top = r.top - popH - 10;
+    if (top < 8) top = r.bottom + 10;
+    annotPop.style.left = left + "px";
+    annotPop.style.top = top + window.scrollY + "px";
+  }
+  /* 点击弹窗自身关闭 */
+  annotPop.addEventListener("click", hideAnnotPop);
+  /* 点击非注释区域自动关闭 */
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest || !e.target.closest(".annot")) hideAnnotPop();
+  });
+  /* 滚动 / Esc 关闭 */
+  window.addEventListener("scroll", hideAnnotPop, true);
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") hideAnnotPop(); });
 
   /* ---------- 随机 & 回顶 ---------- */
   document.getElementById("random-btn").addEventListener("click", function () {
