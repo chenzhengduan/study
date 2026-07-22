@@ -19,6 +19,7 @@
   var view = document.getElementById("view");
   var cache = {};
   var searchIndex = null;
+  var enSearchIndex = null;
   var store = {
     get: function (k, d) { try { var v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } },
     set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
@@ -52,6 +53,40 @@
     return getJSON(DATA_BASE + "en/sentences.json").then(function (d) { cache["en:sentences"] = d; return d; });
   }
 
+  /* 英语单词查找映射：word(小写) → { phonetic, meaning, pos } */
+  var enWordMap = null;
+  function buildEnWordMap() {
+    if (enWordMap) return Promise.resolve(enWordMap);
+    return loadEnWords().then(function (data) {
+      var map = {};
+      data.categories.forEach(function (c) {
+        c.words.forEach(function (w) {
+          map[w.word.toLowerCase()] = { phonetic: w.phonetic, meaning: w.meaning, pos: w.pos };
+        });
+      });
+      enWordMap = map; return map;
+    });
+  }
+
+  /* 句子中标记已知单词：返回 HTML，已知词包成 .en-wm */
+  function markEnSentence(text, wordMap) {
+    var result = "", lastIndex = 0, regex = /[a-zA-Z']+/g, match;
+    while ((match = regex.exec(text)) !== null) {
+      result += esc(text.slice(lastIndex, match.index));
+      var word = match[0];
+      var info = wordMap[word.toLowerCase()];
+      if (info) {
+        result += '<span class="en-wm" data-word="' + esc(word) + '" data-phonetic="' + esc(info.phonetic) +
+          '" data-pos="' + esc(info.pos) + '" data-meaning="' + esc(info.meaning) + '">' + esc(word) + "</span>";
+      } else {
+        result += esc(word);
+      }
+      lastIndex = regex.lastIndex;
+    }
+    result += esc(text.slice(lastIndex));
+    return result;
+  }
+
   function buildSearchIndex() {
     if (searchIndex) return Promise.resolve(searchIndex);
     return Promise.all(GRADE_ORDER.map(function (g) { return loadGrade(g[0]).catch(function () { return null; }); }))
@@ -65,6 +100,25 @@
         });
         searchIndex = list; return list;
       });
+  }
+
+  /* 英语搜索索引：t=单词/句子, sub=音标+释义/翻译, cat=分类名, icon=分类图标, type=w/s */
+  function buildEnSearchIndex() {
+    if (enSearchIndex) return Promise.resolve(enSearchIndex);
+    return Promise.all([loadEnWords(), loadEnSentences()]).then(function (res) {
+      var list = [];
+      res[0].categories.forEach(function (c) {
+        c.words.forEach(function (w) {
+          list.push({ t: w.word, sub: w.phonetic + " " + w.meaning, cat: c.name, icon: c.icon, type: "w", ex: w.example, excn: w.example_cn });
+        });
+      });
+      res[1].categories.forEach(function (c) {
+        c.sentences.forEach(function (s) {
+          list.push({ t: s.en, sub: s.cn, cat: c.name, icon: c.icon, type: "s" });
+        });
+      });
+      enSearchIndex = list; return list;
+    });
   }
 
   /* ---------- 迷你 Markdown ---------- */
@@ -187,13 +241,19 @@
   function updateBrand() {
     var logo = document.querySelector(".app-bar__logo");
     var name = document.querySelector(".app-bar__name");
+    var searchInput = document.getElementById("search-input");
+    var searchTab = document.querySelector('.tab-bar__item[data-tab="search"]');
     if (state.subject === "en") {
       if (logo) logo.textContent = "En";
       if (name) name.textContent = "英语启蒙";
+      if (searchInput) searchInput.placeholder = "搜单词 / 句子 / 中文…";
+      if (searchTab) searchTab.href = "#/en/search";
       document.title = "英语启蒙 · 实用知识库";
     } else {
       if (logo) logo.textContent = "诗";
       if (name) name.textContent = "古诗诵读";
+      if (searchInput) searchInput.placeholder = "搜诗名 / 诗人 / 朝代 / 主题…";
+      if (searchTab) searchTab.href = "#/search";
       document.title = "古诗诵读 · 实用知识库";
     }
   }
@@ -290,12 +350,13 @@
   function renderEnSentCat(catName) {
     loading();
     updateBrand();
-    loadEnSentences().then(function (data) {
+    Promise.all([loadEnSentences(), buildEnWordMap()]).then(function (res) {
+      var data = res[0], wordMap = res[1];
       var cat = null;
       data.categories.forEach(function (c) { if (c.name === catName) cat = c; });
       if (!cat) { errView("未找到分类「" + catName + "」"); return; }
       var cards = cat.sentences.map(function (s) {
-        return '<div class="en-sent"><span class="en-sent__en">' + esc(s.en) + "</span>" +
+        return '<div class="en-sent"><span class="en-sent__en">' + markEnSentence(s.en, wordMap) + "</span>" +
           '<span class="en-sent__cn">' + esc(s.cn) + "</span></div>";
       }).join("");
       show(
@@ -305,6 +366,13 @@
         '<div class="en-sent-list">' + cards + "</div></section>",
         ""
       );
+      // 绑定英语单词点击弹窗
+      view.querySelectorAll(".en-wm").forEach(function (el) {
+        el.addEventListener("click", function (e) {
+          e.stopPropagation();
+          showEnWordPop(el);
+        });
+      });
     }).catch(function () { errView("数据加载失败"); });
   }
 
@@ -718,20 +786,99 @@
     });
   }
 
-  /* ---------- 全局搜索弹层 ---------- */
+  /* ===== 英语搜索页 ===== */
+  function renderEnSearch(q) {
+    loading();
+    updateBrand();
+    Promise.all([buildEnSearchIndex(), buildEnWordMap()]).then(function (res) {
+      var list = res[0], wordMap = res[1];
+      var cats = {};
+      list.forEach(function (p) { cats[p.cat] = 1; });
+      var catNames = Object.keys(cats);
+      var catGroup = '<div class="fgroup"><span class="fgroup__label">分类</span><div class="fgroup__chips">' +
+        '<button class="chip chip--all" data-f="c" data-v="">全部</button>' +
+        catNames.map(function (n) { return '<button class="chip" data-f="c" data-v="' + esc(n) + '">' + esc(n) + "</button>"; }).join("") +
+        "</div></div>";
+      show(
+        '<section class="sec" style="margin-top:0"><div class="sec__head"><div><p class="sec__eyebrow">ENGLISH SEARCH</p><h2>查找单词/句子</h2></div><p>全库 ' + list.length + " 条</p></div>" +
+        '<div class="filter-panel">' +
+        '<button class="filter-head" id="fhead"><span class="filter-head__title">筛选</span>' +
+        '<span class="filter-head__summary" id="fsummary">全部</span>' +
+        '<span class="filter-head__chev">▾</span></button>' +
+        '<div class="filter-body" id="fbody"><div class="filter-row"><input class="filter-input" id="sq" placeholder="单词 / 句子 / 中文…" value="' + esc(q.q || "") + '"></div>' +
+        catGroup +
+        "</div></div>" +
+        '<p class="result-meta" id="smeta"></p><div class="en-search-list" id="slist"></div></section>',
+        "search"
+      );
+      var fhead = document.getElementById("fhead");
+      var panel = fhead.parentElement;
+      panel.classList.toggle("is-open", !window.matchMedia("(max-width: 759px)").matches);
+      fhead.addEventListener("click", function () { panel.classList.toggle("is-open"); });
+
+      var F = { q: q.q || "", c: q.c || "" };
+      function draw() {
+        var res = list.filter(function (p) {
+          if (F.q) { var s = (p.t + " " + p.sub + " " + (p.ex || "") + " " + (p.excn || "")).toLowerCase(); if (s.indexOf(F.q.toLowerCase()) < 0) return false; }
+          if (F.c && p.cat !== F.c) return false;
+          return true;
+        });
+        document.getElementById("smeta").textContent = "共 " + res.length + " 条";
+        document.getElementById("slist").innerHTML = res.length ? res.slice(0, 300).map(function (p) {
+          if (p.type === "w") {
+            return '<div class="en-word en-word--search"><div class="en-word__head">' +
+              '<span class="en-word__text">' + esc(p.t) + "</span>" +
+              '<span class="en-word__phonetic">' + esc(p.sub.split(" ")[0]) + "</span>" +
+              '<span class="en-search__cat">' + p.icon + " " + esc(p.cat) + "</span></div>" +
+              '<div class="en-word__meta"><span class="en-word__meaning">' + esc(p.sub.split(" ").slice(1).join(" ")) + "</span></div>" +
+              '<div class="en-word__example"><span class="en-word__ex-en">' + esc(p.ex || "") + "</span>" +
+              '<span class="en-word__ex-cn">' + esc(p.excn || "") + "</span></div></div>";
+          }
+          return '<div class="en-sent"><span class="en-sent__en">' + markEnSentence(p.t, wordMap) + "</span>" +
+            '<span class="en-sent__cn">' + esc(p.sub) + "</span>" +
+            '<span class="en-search__cat">' + p.icon + " " + esc(p.cat) + "</span></div>";
+        }).join("") : '<div class="empty"><span class="empty__icon">⌕</span>没有找到，换个关键字试试。</div>';
+        document.querySelectorAll(".chip").forEach(function (c) { c.classList.toggle("is-on", F[c.getAttribute("data-f")] === c.getAttribute("data-v")); });
+      }
+      view.querySelectorAll(".chip").forEach(function (c) { c.addEventListener("click", function () { var f = c.getAttribute("data-f"); F[f] = (F[f] === c.getAttribute("data-v")) ? "" : c.getAttribute("data-v"); draw(); }); });
+      document.getElementById("sq").addEventListener("input", function () { F.q = this.value.trim(); draw(); });
+      draw();
+      // 绑定英语单词点击弹窗（每次 draw 后重新绑定）
+      view.querySelector("#slist").addEventListener("click", function (e) {
+        var wm = e.target.closest ? e.target.closest(".en-wm") : null;
+        if (wm) { e.stopPropagation(); showEnWordPop(wm); }
+      });
+    });
+  }
+
+  /* ---------- 全局搜索弹层（双模式） ---------- */
   var sInput = document.getElementById("search-input");
   var sPop = document.getElementById("search-pop");
   var sTimer = null;
+  function getSearchIndex() {
+    return state.subject === "en" ? buildEnSearchIndex() : buildSearchIndex();
+  }
   sInput.addEventListener("input", function () {
     var q = this.value.trim();
     clearTimeout(sTimer);
     if (!q) { sPop.hidden = true; return; }
     sTimer = setTimeout(function () {
-      buildSearchIndex().then(function (list) {
+      getSearchIndex().then(function (list) {
         var ql = q.toLowerCase();
-        var hits = list.filter(function (p) { return (p.t + " " + p.p + " " + p.d + " " + p.ty + " " + p.th + " " + p.gl).toLowerCase().indexOf(ql) >= 0; });
-        if (!hits.length) { sPop.innerHTML = '<div class="search-pop__empty">没有找到「' + esc(q) + "」相关篇目</div>"; sPop.hidden = false; return; }
+        var isEn = state.subject === "en";
+        var hits = list.filter(function (p) {
+          var s = isEn
+            ? (p.t + " " + p.sub + " " + (p.ex || "") + " " + (p.excn || "")).toLowerCase()
+            : (p.t + " " + p.p + " " + p.d + " " + p.ty + " " + p.th + " " + p.gl).toLowerCase();
+          return s.indexOf(ql) >= 0;
+        });
+        if (!hits.length) { sPop.innerHTML = '<div class="search-pop__empty">没有找到「' + esc(q) + "」相关" + (isEn ? "内容" : "篇目") + "</div>"; sPop.hidden = false; return; }
         sPop.innerHTML = hits.slice(0, 8).map(function (p) {
+          if (isEn) {
+            return '<div class="search-pop__item" data-type="' + p.type + '" data-cat="' + esc(p.cat) + '">' +
+              '<span class="search-pop__title">' + esc(p.t) + '</span>' +
+              '<span class="search-pop__meta">' + p.icon + " " + esc(p.cat) + " · " + esc(p.sub.split(" ").slice(0, 3).join(" ")) + "</span></div>";
+          }
           return '<div class="search-pop__item" data-g="' + esc(p.g) + '" data-t="' + esc(p.t) + '">' +
             '<span class="search-pop__title">' + esc(p.t) + '</span>' +
             '<span class="search-pop__meta">' + esc(p.d) + " · " + esc(p.p) + " · " + esc(p.gl) + "</span></div>";
@@ -739,7 +886,11 @@
         sPop.hidden = false;
         sPop.querySelectorAll(".search-pop__item").forEach(function (el) {
           el.addEventListener("click", function () {
-            location.hash = "#/p/" + enc(el.getAttribute("data-g")) + "/" + enc(el.getAttribute("data-t"));
+            if (isEn) {
+              location.hash = "#/en/" + el.getAttribute("data-type") + "/" + enc(el.getAttribute("data-cat"));
+            } else {
+              location.hash = "#/p/" + enc(el.getAttribute("data-g")) + "/" + enc(el.getAttribute("data-t"));
+            }
             sPop.hidden = true; sInput.blur();
           });
         });
@@ -747,7 +898,13 @@
     }, 160);
   });
   sInput.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") { var q = this.value.trim(); if (q) { location.hash = "#/search?q=" + enc(q); sPop.hidden = true; this.blur(); } }
+    if (e.key === "Enter") {
+      var q = this.value.trim();
+      if (q) {
+        location.hash = state.subject === "en" ? "#/en/search?q=" + enc(q) : "#/search?q=" + enc(q);
+        sPop.hidden = true; this.blur();
+      }
+    }
     if (e.key === "Escape") { sPop.hidden = true; this.blur(); }
   });
   document.addEventListener("click", function (e) { if (!sPop.contains(e.target) && e.target !== sInput) sPop.hidden = true; });
@@ -783,14 +940,56 @@
   window.addEventListener("scroll", hideAnnotPop, true);
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") hideAnnotPop(); });
 
+  /* ---------- 英语单词气泡（全局单例） ---------- */
+  var enWordPop = document.createElement("div");
+  enWordPop.id = "en-word-pop";
+  enWordPop.className = "en-word-pop";
+  enWordPop.setAttribute("role", "tooltip");
+  document.body.appendChild(enWordPop);
+  function hideEnWordPop() { enWordPop.classList.remove("is-show"); }
+  function showEnWordPop(el) {
+    var word = el.getAttribute("data-word") || "";
+    var phonetic = el.getAttribute("data-phonetic") || "";
+    var pos = el.getAttribute("data-pos") || "";
+    var meaning = el.getAttribute("data-meaning") || "";
+    enWordPop.innerHTML = '<span class="en-word-pop__word">' + esc(word) + "</span>" +
+      '<span class="en-word-pop__phonetic">' + esc(phonetic) + "</span>" +
+      '<span class="en-word-pop__pos">' + esc(pos) + "</span>" +
+      '<span class="en-word-pop__meaning">' + esc(meaning) + "</span>";
+    enWordPop.classList.add("is-show");
+    var r = el.getBoundingClientRect();
+    var popW = enWordPop.offsetWidth, popH = enWordPop.offsetHeight;
+    var left = Math.max(8, Math.min(r.left + r.width / 2 - popW / 2, window.innerWidth - popW - 8));
+    var top = r.top - popH - 10;
+    if (top < 8) top = r.bottom + 10;
+    enWordPop.style.left = left + "px";
+    enWordPop.style.top = top + window.scrollY + "px";
+  }
+  enWordPop.addEventListener("click", hideEnWordPop);
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest || !e.target.closest(".en-wm")) hideEnWordPop();
+  });
+  window.addEventListener("scroll", hideEnWordPop, true);
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") hideEnWordPop(); });
+
   /* ---------- 随机 & 回顶 ---------- */
   document.getElementById("random-btn").addEventListener("click", function () {
-    buildSearchIndex().then(function (list) {
-      var withBody = list.filter(function (p) { return p.has; });
-      var pool = withBody.length ? withBody : list;
-      var p = pool[Math.floor(Math.random() * pool.length)];
-      location.hash = "#/p/" + enc(p.g) + "/" + enc(p.t);
-    });
+    if (state.subject === "en") {
+      Promise.all([loadEnWords(), loadEnSentences()]).then(function (res) {
+        var cats = [];
+        res[0].categories.forEach(function (c) { cats.push({ name: c.name, type: "w" }); });
+        res[1].categories.forEach(function (c) { cats.push({ name: c.name, type: "s" }); });
+        var cat = cats[Math.floor(Math.random() * cats.length)];
+        location.hash = "#/en/" + cat.type + "/" + enc(cat.name);
+      });
+    } else {
+      buildSearchIndex().then(function (list) {
+        var withBody = list.filter(function (p) { return p.has; });
+        var pool = withBody.length ? withBody : list;
+        var p = pool[Math.floor(Math.random() * pool.length)];
+        location.hash = "#/p/" + enc(p.g) + "/" + enc(p.t);
+      });
+    }
   });
   document.getElementById("top-btn").addEventListener("click", function () { window.scrollTo({ top: 0, behavior: "smooth" }); });
 
@@ -811,6 +1010,7 @@
     if (parts[0] === "en" && parts[1] === "w" && parts[2]) return renderEnWordCat(parts[2]);
     if (parts[0] === "en" && parts[1] === "s" && parts[2]) return renderEnSentCat(parts[2]);
     if (parts[0] === "en") return renderEnHome();
+    if (parts[0] === "en" && parts[1] === "search") return renderEnSearch(qs);
     if (parts[0] === "search") return renderSearch(qs);
     renderHome();
   }
