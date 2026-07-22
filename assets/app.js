@@ -86,6 +86,55 @@
     }).join("");
   }
 
+  /* 解析注释 Markdown："- **词**：解释" → { 词: 解释 } */
+  function parseNotes(src) {
+    var notes = {};
+    if (!src) return notes;
+    String(src).split(/\r?\n/).forEach(function (ln) {
+      var m = /^\s*[-*]\s+\*\*(.+?)\*\*\s*[：:]\s*(.*)$/.exec(ln);
+      if (m && m[1].trim()) notes[m[1].trim()] = m[2].trim();
+    });
+    return notes;
+  }
+
+  /* 带注释标注的 ruby 行渲染：匹配到的词包成可点击 .annot */
+  function rubyLineAnnotated(pairs, notes) {
+    var terms = Object.keys(notes);
+    if (!terms.length) return rubyLine(pairs);
+    var chars = pairs.map(function (pr) { return pr[0]; });
+    var full = chars.join("");
+    var marks = new Array(pairs.length).fill(null);
+    terms.forEach(function (term) {
+      var from = 0, pos;
+      while ((pos = full.indexOf(term, from)) >= 0) {
+        for (var j = pos; j < pos + term.length && j < pairs.length; j++) {
+          if (!marks[j]) marks[j] = term;
+        }
+        from = pos + 1;
+      }
+    });
+    var html = "", i = 0;
+    while (i < pairs.length) {
+      if (marks[i]) {
+        var term = marks[i];
+        var start = i;
+        while (i < pairs.length && marks[i] === term) i++;
+        var inner = pairs.slice(start, i).map(function (pr) {
+          var ch = pr[0], py = pr[1];
+          if (!py) return esc(ch);
+          return "<ruby>" + esc(ch) + "<rt>" + esc(py) + "</rt></ruby>";
+        }).join("");
+        html += '<span class="annot" data-term="' + esc(term) + '" data-explain="' + esc(notes[term]) + '">' + inner + "</span>";
+      } else {
+        var ch = pairs[i][0], py = pairs[i][1];
+        if (!py) html += esc(ch);
+        else html += "<ruby>" + esc(ch) + "<rt>" + esc(py) + "</rt></ruby>";
+        i++;
+      }
+    }
+    return html;
+  }
+
   /* ---------- 主题 ---------- */
   function applyTheme(t) {
     document.documentElement.setAttribute("data-theme", t);
@@ -369,8 +418,9 @@
       if (i < 0) { errView("未找到《" + title + "》"); return; }
       var p = poems[i], prev = poems[i - 1], next = poems[i + 1];
 
+      var notes = parseNotes(p.sections && p.sections["注释"]);
       var bodyHtml = p.lines.length
-        ? p.ruby.map(function (pairs) { return '<p class="poem-line">' + rubyLine(pairs) + "</p>"; }).join("")
+        ? p.ruby.map(function (pairs) { return '<p class="poem-line">' + rubyLineAnnotated(pairs, notes) + "</p>"; }).join("")
         : '<div class="poem-placeholder">本篇内容整理中，敬请期待。</div>';
 
       var secs = "";
@@ -452,6 +502,37 @@
 
       view.querySelectorAll(".sec-block__head").forEach(function (h) {
         h.addEventListener("click", function () { h.parentElement.classList.toggle("is-open"); });
+      });
+
+      /* 注释气泡：点击诗中标注词弹出解释 */
+      var annotPop = document.getElementById("annot-pop");
+      if (!annotPop) {
+        annotPop = document.createElement("div");
+        annotPop.id = "annot-pop";
+        annotPop.className = "annot-pop";
+        annotPop.setAttribute("role", "tooltip");
+        document.body.appendChild(annotPop);
+        annotPop.addEventListener("click", function () { annotPop.classList.remove("is-show"); });
+        document.addEventListener("click", function (e) {
+          if (!e.target.closest || !e.target.closest(".annot")) annotPop.classList.remove("is-show");
+        });
+      }
+      body.querySelectorAll(".annot").forEach(function (el) {
+        el.addEventListener("click", function (e) {
+          e.stopPropagation();
+          var term = el.getAttribute("data-term") || "";
+          var explain = el.getAttribute("data-explain") || "";
+          annotPop.innerHTML = '<span class="annot-pop__term">' + esc(term) + "</span>" +
+            '<span class="annot-pop__body">' + esc(explain) + "</span>";
+          annotPop.classList.add("is-show");
+          var r = el.getBoundingClientRect();
+          var popW = annotPop.offsetWidth, popH = annotPop.offsetHeight;
+          var left = Math.max(8, Math.min(r.left + r.width / 2 - popW / 2, window.innerWidth - popW - 8));
+          var top = r.top - popH - 10;
+          if (top < 8) top = r.bottom + 10; /* 上方放不下则放下方 */
+          annotPop.style.left = left + "px";
+          annotPop.style.top = top + window.scrollY + "px";
+        });
       });
     }).catch(function () { errView("诗文加载失败"); });
   }
