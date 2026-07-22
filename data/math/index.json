@@ -1,0 +1,181 @@
+{
+  "title": "4-7岁亲子数学思维题库",
+  "generated_by": "tools/generate_math_data.py",
+  "seed": 20260722,
+  "total": 1024,
+  "age_range": "4-7",
+  "category_count": 19,
+  "difficulty_count": 4,
+  "categories": [
+    {
+      "code": "estimate",
+      "name": "估计与判断",
+      "icon": "👀",
+      "count": 54
+    },
+    {
+      "code": "invariant",
+      "name": "保持不变",
+      "icon": "⚖️",
+      "count": 54
+    },
+    {
+      "code": "fair_share",
+      "name": "公平与平均",
+      "icon": "🤝",
+      "count": 54
+    },
+    {
+      "code": "classify",
+      "name": "分类与比较",
+      "icon": "🏷️",
+      "count": 54
+    },
+    {
+      "code": "reverse",
+      "name": "反向问题",
+      "icon": "↩️",
+      "count": 54
+    },
+    {
+      "code": "possibility",
+      "name": "可能性判断",
+      "icon": "🎲",
+      "count": 54
+    },
+    {
+      "code": "multi_answer",
+      "name": "多种答案",
+      "icon": "🔀",
+      "count": 54
+    },
+    {
+      "code": "counterexample",
+      "name": "找反例",
+      "icon": "🔍",
+      "count": 54
+    },
+    {
+      "code": "part_whole",
+      "name": "整体与部分",
+      "icon": "🫙",
+      "count": 53
+    },
+    {
+      "code": "max_min",
+      "name": "最多与最少",
+      "icon": "📈",
+      "count": 54
+    },
+    {
+      "code": "condition",
+      "name": "条件不足",
+      "icon": "❓",
+      "count": 54
+    },
+    {
+      "code": "truth",
+      "name": "真假判断",
+      "icon": "✅",
+      "count": 54
+    },
+    {
+      "code": "space",
+      "name": "空间与形状",
+      "icon": "⬜",
+      "count": 54
+    },
+    {
+      "code": "proof",
+      "name": "简单证明",
+      "icon": "💬",
+      "count": 54
+    },
+    {
+      "code": "negative",
+      "name": "简单负数思维",
+      "icon": "🏢",
+      "count": 54
+    },
+    {
+      "code": "create",
+      "name": "自己出题",
+      "icon": "✏️",
+      "count": 54
+    },
+    {
+      "code": "pattern",
+      "name": "规律变化",
+      "icon": "🧩",
+      "count": 54
+    },
+    {
+      "code": "path",
+      "name": "路线与方向",
+      "icon": "🧭",
+      "count": 53
+    },
+    {
+      "code": "order",
+      "name": "顺序推理",
+      "icon": "🚶",
+      "count": 54
+    }
+  ],
+  "difficulties": {
+    "1": 266,
+    "2": 264,
+    "3": 247,
+    "4": 247
+  },
+  "interaction_types": {
+    "arrange_groups": 54,
+    "child_create_problem": 54,
+    "condition_check": 54,
+    "estimate_then_count": 54,
+    "explain_with_objects": 54,
+    "fair_share": 54,
+    "find_counterexample": 54,
+    "move_and_compare": 54,
+    "number_line_walk": 54,
+    "optimize_distribution": 54,
+    "order_cards": 54,
+    "part_whole_hidden": 53,
+    "path_walk": 53,
+    "pattern_continue": 54,
+    "possibility_judgment": 54,
+    "reverse_operation": 54,
+    "shape_build": 54,
+    "sort_objects": 54,
+    "true_false_with_reason": 54
+  },
+  "quality_checks": {
+    "required_fields": [
+      "id",
+      "age_range",
+      "difficulty",
+      "category",
+      "category_code",
+      "icon",
+      "scene",
+      "title",
+      "question",
+      "materials",
+      "parent_script",
+      "follow_ups",
+      "interaction",
+      "answer",
+      "explanation",
+      "possible_responses",
+      "observation_focus",
+      "avoid_saying",
+      "extension_questions"
+    ],
+    "min_questions": 1000,
+    "duplicate_ids": 0,
+    "duplicate_questions": 0,
+    "min_follow_up_rounds": 2,
+    "rejects_empty_fields": true,
+    "rejects_arithmetic_only_stems": true
+  }
+}

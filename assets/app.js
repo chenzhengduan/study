@@ -20,6 +20,7 @@
   var cache = {};
   var searchIndex = null;
   var enSearchIndex = null;
+  var mathSearchIndex = null;
   var store = {
     get: function (k, d) { try { var v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } },
     set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
@@ -51,6 +52,89 @@
   function loadEnSentences() {
     if (cache["en:sentences"]) return Promise.resolve(cache["en:sentences"]);
     return getJSON(DATA_BASE + "en/sentences.json").then(function (d) { cache["en:sentences"] = d; return d; });
+  }
+
+  /* ---------- 亲子数学数据 ---------- */
+  function loadMathIndex() {
+    if (cache["math:index"]) return Promise.resolve(cache["math:index"]);
+    return getJSON(DATA_BASE + "math/index.json").then(function (d) { cache["math:index"] = d; return d; });
+  }
+  function loadMathQuestions() {
+    if (cache["math:questions"]) return Promise.resolve(cache["math:questions"]);
+    return getJSON(DATA_BASE + "math/questions.json").then(function (d) { cache["math:questions"] = d; return d; });
+  }
+  function buildMathSearchIndex() {
+    if (mathSearchIndex) return Promise.resolve(mathSearchIndex);
+    return loadMathQuestions().then(function (questions) {
+      mathSearchIndex = questions.map(function (q) {
+        return {
+          type: "math", id: q.id, t: q.question, title: q.title, sub: q.category,
+          cat: q.category, code: q.category_code, icon: q.icon, difficulty: q.difficulty,
+          keywords: [q.scene, q.answer, q.explanation].concat(q.materials || []).join(" ")
+        };
+      });
+      return mathSearchIndex;
+    });
+  }
+
+  /* 英语内容图标：优先匹配具体词义，找不到时使用分类图标 */
+  var EN_ICON_RULES = [
+    [/\bapple\b/i, "🍎"], [/\bbanana\b/i, "🍌"], [/\borange\b/i, "🍊"], [/\bgrape/i, "🍇"],
+    [/watermelon/i, "🍉"], [/strawberr/i, "🍓"], [/\bpear\b/i, "🍐"], [/\bpeach/i, "🍑"],
+    [/\bcherr/i, "🍒"], [/pineapple/i, "🍍"], [/\blemon/i, "🍋"], [/\bcoconut/i, "🥥"],
+    [/\bkiwi/i, "🥝"], [/blueberr|blackberr|raspberr/i, "🫐"], [/\bcarrot/i, "🥕"], [/tomato/i, "🍅"],
+    [/potato/i, "🥔"], [/cucumber/i, "🥒"], [/\bcorn\b/i, "🌽"], [/broccoli/i, "🥦"],
+    [/pumpkin/i, "🎃"], [/eggplant/i, "🍆"], [/pepper/i, "🌶️"], [/onion/i, "🧅"],
+    [/garlic/i, "🧄"], [/mushroom/i, "🍄"], [/\bbread\b/i, "🍞"], [/\brice\b/i, "🍚"],
+    [/noodle/i, "🍜"], [/pizza/i, "🍕"], [/hamburger|burger/i, "🍔"], [/sandwich/i, "🥪"],
+    [/\begg\b/i, "🥚"], [/\bmilk\b/i, "🥛"], [/\bwater\b/i, "💧"], [/\bjuice\b/i, "🧃"],
+    [/\btea\b/i, "🍵"], [/coffee/i, "☕"], [/\bcake\b/i, "🍰"], [/cookie/i, "🍪"],
+    [/chocolate/i, "🍫"], [/ice cream/i, "🍦"], [/candy/i, "🍬"], [/\bcat\b|kitten/i, "🐱"],
+    [/\bdog\b|puppy/i, "🐶"], [/rabbit|bunny/i, "🐰"], [/\bbear\b/i, "🐻"], [/panda/i, "🐼"],
+    [/\blion\b/i, "🦁"], [/tiger/i, "🐯"], [/elephant/i, "🐘"], [/monkey/i, "🐵"],
+    [/giraffe/i, "🦒"], [/zebra/i, "🦓"], [/\bhorse\b/i, "🐴"], [/\bcow\b/i, "🐮"],
+    [/\bpig\b/i, "🐷"], [/\bsheep\b/i, "🐑"], [/\bduck\b/i, "🦆"], [/chicken/i, "🐔"],
+    [/\bbird\b/i, "🐦"], [/\bfish\b/i, "🐟"], [/whale/i, "🐋"], [/dolphin/i, "🐬"],
+    [/butterfl/i, "🦋"], [/\bbee\b/i, "🐝"], [/\bcar\b/i, "🚗"], [/\bbus\b/i, "🚌"],
+    [/\btrain\b/i, "🚆"], [/plane|airplane/i, "✈️"], [/\bship\b|boat/i, "🚢"], [/bicycle|bike/i, "🚲"],
+    [/\bbook\b|read/i, "📖"], [/pencil|write/i, "✏️"], [/school|class/i, "🏫"], [/teacher/i, "👩‍🏫"],
+    [/doctor/i, "🧑‍⚕️"], [/home|house/i, "🏠"], [/family/i, "👨‍👩‍👧‍👦"], [/friend/i, "🤝"],
+    [/sunny|\bsun\b/i, "☀️"], [/rain/i, "🌧️"], [/snow/i, "❄️"], [/cloud/i, "☁️"],
+    [/rainbow/i, "🌈"], [/\bmoon\b|night/i, "🌙"], [/\bstar\b/i, "⭐"], [/flower/i, "🌸"],
+    [/tree|forest/i, "🌳"], [/happy|smile|great|good job/i, "😊"], [/sad|cry/i, "😢"], [/angry/i, "😠"],
+    [/love|heart/i, "❤️"], [/hello|morning|welcome|goodbye|bye/i, "👋"], [/thank/i, "🙏"],
+    [/sorry/i, "🙇"], [/help/i, "🆘"], [/careful|danger|safe/i, "⚠️"], [/birthday/i, "🎂"],
+    [/music|sing|song/i, "🎵"], [/dance/i, "💃"], [/football|soccer/i, "⚽"], [/basketball/i, "🏀"],
+    [/run|running/i, "🏃"], [/swim/i, "🏊"], [/sleep|bed/i, "😴"], [/time|clock/i, "🕐"]
+  ];
+  function enItemIcon(text, fallback) {
+    for (var i = 0; i < EN_ICON_RULES.length; i++) if (EN_ICON_RULES[i][0].test(text || "")) return EN_ICON_RULES[i][1];
+    return fallback || "💬";
+  }
+  function speakEnglish(text) {
+    if (!("speechSynthesis" in window) || !text) return;
+    window.speechSynthesis.cancel();
+    var utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "en-US";
+    utterance.rate = 0.78;
+    window.speechSynthesis.speak(utterance);
+  }
+  function bindEnglishActions(root) {
+    if (!root) return;
+    root.addEventListener("click", function (e) {
+      var speak = e.target.closest ? e.target.closest("[data-speak]") : null;
+      if (speak) { e.preventDefault(); e.stopPropagation(); speakEnglish(speak.getAttribute("data-speak")); return; }
+      var reveal = e.target.closest ? e.target.closest("[data-reveal-cn]") : null;
+      if (reveal) {
+        e.preventDefault(); e.stopPropagation();
+        var card = reveal.closest(".en-sent");
+        if (card) {
+          var shown = card.classList.toggle("is-cn-shown");
+          reveal.textContent = shown ? "隐藏中文" : "显示中文";
+          reveal.setAttribute("aria-expanded", shown ? "true" : "false");
+        }
+      }
+    });
   }
 
   /* 英语单词查找映射：word(小写) → { phonetic, meaning, pos } */
@@ -249,6 +333,12 @@
       if (searchInput) searchInput.placeholder = "搜单词 / 句子 / 中文…";
       if (searchTab) searchTab.href = "#/en/search";
       document.title = "英语启蒙 · 实用知识库";
+    } else if (state.subject === "math") {
+      if (logo) logo.textContent = "数";
+      if (name) name.textContent = "亲子数学";
+      if (searchInput) searchInput.placeholder = "搜场景 / 思维类型 / 问题…";
+      if (searchTab) searchTab.href = "#/math/search";
+      document.title = "亲子数学思维 · 实用知识库";
     } else {
       if (logo) logo.textContent = "诗";
       if (name) name.textContent = "古诗诵读";
@@ -261,6 +351,7 @@
     return '<div class="subject-switch">' +
       '<button class="subject-switch__btn' + (state.subject === "zh" ? " is-active" : "") + '" data-subject="zh">语文</button>' +
       '<button class="subject-switch__btn' + (state.subject === "en" ? " is-active" : "") + '" data-subject="en">英语</button>' +
+      '<button class="subject-switch__btn' + (state.subject === "math" ? " is-active" : "") + '" data-subject="math">数学</button>' +
       "</div>";
   }
   function bindSubjectSwitch() {
@@ -268,9 +359,9 @@
       btn.addEventListener("click", function () {
         var s = btn.getAttribute("data-subject");
         if (s === state.subject) return;
-        state.subject = s; store.set("subject", s);
-        updateBrand();
-        renderHome();
+        sInput.value = "";
+        sPop.hidden = true;
+        location.hash = s === "zh" ? "#/" : "#/" + s;
       });
     });
   }
@@ -279,10 +370,12 @@
   function renderHome() {
     updateBrand();
     if (state.subject === "en") return renderEnHome();
+    if (state.subject === "math") return renderMathHome();
     renderZhHome();
   }
 
   /* ===== 英语首页 ===== */
+  var enHomeTab = store.get("enHomeTab", "w");
   function renderEnHome() {
     loading();
     Promise.all([loadEnWords(), loadEnSentences()]).then(function (res) {
@@ -303,24 +396,43 @@
       var wordCats = words.categories.map(function (c) { return catCard(c, "w"); }).join("");
       var sentCats = sents.categories.map(function (c) { return catCard(c, "s"); }).join("");
 
+      var tabHtml =
+        '<div class="en-tabs">' +
+        '<button class="en-tabs__btn' + (enHomeTab === "w" ? " is-active" : "") + '" data-tab="w">' +
+          '<span class="en-tabs__label">主题单词</span><span class="en-tabs__count">' + wordTotal + " 词</span></button>" +
+        '<button class="en-tabs__btn' + (enHomeTab === "s" ? " is-active" : "") + '" data-tab="s">' +
+          '<span class="en-tabs__label">场景句子</span><span class="en-tabs__count">' + sentTotal + " 句</span></button>" +
+        "</div>";
+
+      var contentHtml = enHomeTab === "w"
+        ? '<div class="en-cat-grid">' + wordCats + "</div>"
+        : '<div class="en-cat-grid">' + sentCats + "</div>";
+
       show(
         subjectSwitchHtml() +
         '<section class="hero hero--en"><p class="hero__kicker">ENGLISH LEARNING</p><h1>英语启蒙</h1>' +
         '<p class="hero__desc">按主题学单词，按场景学句子。' + wordTotal + " 个单词 · " + sentTotal + " 个句子，专为小朋友设计。</p></section>" +
-
-        '<section class="sec"><div class="sec__head"><div><p class="sec__eyebrow">WORDS</p><h2>主题单词</h2></div><p>' + wordTotal + " 词</p></div>" +
-        '<div class="en-cat-grid">' + wordCats + "</div></section>" +
-
-        '<section class="sec"><div class="sec__head"><div><p class="sec__eyebrow">SENTENCES</p><h2>场景句子</h2></div><p>' + sentTotal + " 句</p></div>" +
-        '<div class="en-cat-grid">' + sentCats + "</div></section>",
+        tabHtml +
+        '<div class="en-home-body">' + contentHtml + "</div>",
         "home"
       );
       bindSubjectSwitch();
+      // Tab 切换
+      view.querySelectorAll(".en-tabs__btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var t = btn.getAttribute("data-tab");
+          if (t === enHomeTab) return;
+          enHomeTab = t; store.set("enHomeTab", t);
+          view.querySelectorAll(".en-tabs__btn").forEach(function (b) { b.classList.toggle("is-active", b === btn); });
+          var body = view.querySelector(".en-home-body");
+          if (body) body.innerHTML = '<div class="en-cat-grid">' + (t === "w" ? wordCats : sentCats) + "</div>";
+        });
+      });
     }).catch(function () { errView("英语数据加载失败"); });
   }
 
   /* ===== 英语分类详情 ===== */
-  function renderEnWordCat(catName) {
+  function renderEnWordCat(catName, q) {
     loading();
     updateBrand();
     loadEnWords().then(function (data) {
@@ -328,13 +440,16 @@
       data.categories.forEach(function (c) { if (c.name === catName) cat = c; });
       if (!cat) { errView("未找到分类「" + catName + "」"); return; }
       var cards = cat.words.map(function (w) {
-        return '<div class="en-word">' +
-          '<div class="en-word__head"><span class="en-word__text">' + esc(w.word) + "</span>" +
+        var icon = enItemIcon(w.word + " " + w.meaning, cat.icon);
+        return '<div class="en-word" data-focus-id="' + esc(w.word.toLowerCase()) + '">' +
+          '<span class="en-item-icon" aria-hidden="true">' + icon + "</span>" +
+          '<div class="en-item-main"><div class="en-word__head"><span class="en-word__text">' + esc(w.word) + "</span>" +
           '<span class="en-word__phonetic">' + esc(w.phonetic) + "</span></div>" +
           '<div class="en-word__meta"><span class="en-word__pos">' + esc(w.pos) + "</span>" +
           '<span class="en-word__meaning">' + esc(w.meaning) + "</span></div>" +
           '<div class="en-word__example"><span class="en-word__ex-en">' + esc(w.example) + "</span>" +
-          '<span class="en-word__ex-cn">' + esc(w.example_cn) + "</span></div>" +
+          '<span class="en-word__ex-cn">' + esc(w.example_cn) + "</span></div></div>" +
+          '<button class="en-speak-btn" type="button" data-speak="' + esc(w.word) + '" aria-label="朗读 ' + esc(w.word) + '">🔊</button>' +
           "</div>";
       }).join("");
       show(
@@ -344,10 +459,33 @@
         '<div class="en-word-list">' + cards + "</div></section>",
         ""
       );
+      bindEnglishActions(view);
+      focusEnglishItem(q);
     }).catch(function () { errView("数据加载失败"); });
   }
 
-  function renderEnSentCat(catName) {
+  function enSentenceCard(s, wordMap, catIcon) {
+    var icon = enItemIcon(s.en + " " + s.cn, catIcon);
+    return '<div class="en-sent" data-focus-id="' + esc(s.en.toLowerCase()) + '">' +
+      '<span class="en-item-icon en-item-icon--sent" aria-hidden="true">' + icon + "</span>" +
+      '<div class="en-item-main"><span class="en-sent__en">' + markEnSentence(s.en, wordMap) + "</span>" +
+      '<span class="en-sent__cn">' + esc(s.cn) + "</span>" +
+      '<div class="en-sent__actions"><button type="button" data-speak="' + esc(s.en) + '">🔊 朗读</button>' +
+      '<button type="button" data-reveal-cn aria-expanded="false">显示中文</button></div></div></div>';
+  }
+
+  function focusEnglishItem(q) {
+    if (!q || !q.focus) return;
+    var target = null;
+    view.querySelectorAll("[data-focus-id]").forEach(function (el) {
+      if (!target && el.getAttribute("data-focus-id") === q.focus.toLowerCase()) target = el;
+    });
+    if (!target) return;
+    target.classList.add("is-focused");
+    setTimeout(function () { target.scrollIntoView({ behavior: "smooth", block: "center" }); }, 60);
+  }
+
+  function renderEnSentCat(catName, q) {
     loading();
     updateBrand();
     Promise.all([loadEnSentences(), buildEnWordMap()]).then(function (res) {
@@ -355,10 +493,7 @@
       var cat = null;
       data.categories.forEach(function (c) { if (c.name === catName) cat = c; });
       if (!cat) { errView("未找到分类「" + catName + "」"); return; }
-      var cards = cat.sentences.map(function (s) {
-        return '<div class="en-sent"><span class="en-sent__en">' + markEnSentence(s.en, wordMap) + "</span>" +
-          '<span class="en-sent__cn">' + esc(s.cn) + "</span></div>";
-      }).join("");
+      var cards = cat.sentences.map(function (s) { return enSentenceCard(s, wordMap, cat.icon); }).join("");
       show(
         '<div class="crumbs"><a href="#/">首页</a><i>›</i><a href="#/">英语</a><i>›</i><span>' + esc(cat.name) + "</span></div>" +
         '<section class="en-detail"><div class="en-detail__head"><span class="en-detail__icon">' + cat.icon + "</span>" +
@@ -373,7 +508,160 @@
           showEnWordPop(el);
         });
       });
+      bindEnglishActions(view);
+      focusEnglishItem(q);
     }).catch(function () { errView("数据加载失败"); });
+  }
+
+  /* ===== 亲子数学 ===== */
+  function mathDifficulty(level) {
+    return ["", "直接理解", "一个变化", "特殊思考", "开放探索"][level] || (level + "级");
+  }
+  function mathArrayHtml(items, cls) {
+    return '<ul class="' + cls + '">' + (items || []).map(function (item) { return "<li>" + esc(item) + "</li>"; }).join("") + "</ul>";
+  }
+  function mathQuestionHref(q) { return "#/math/q/" + enc(q.id); }
+
+  function renderMathHome() {
+    loading(); updateBrand();
+    Promise.all([loadMathIndex(), loadMathQuestions()]).then(function (res) {
+      var idx = res[0], questions = res[1];
+      var today = questions[(new Date().getFullYear() * 372 + (new Date().getMonth() + 1) * 31 + new Date().getDate()) % questions.length];
+      var cats = idx.categories.map(function (c) {
+        return '<a class="math-cat" href="#/math/c/' + enc(c.code) + '">' +
+          '<span class="math-cat__icon">' + c.icon + '</span><span class="math-cat__body"><strong>' + esc(c.name) +
+          '</strong><small>' + c.count + ' 张思考卡</small></span><span class="math-cat__arrow">›</span></a>';
+      }).join("");
+      show(
+        subjectSwitchHtml() +
+        '<section class="hero hero--math"><p class="hero__kicker">PARENT-CHILD MATH</p><h1>亲子数学思维</h1>' +
+        '<p class="hero__desc">不是刷口算，而是让孩子摆一摆、画一画、说一说。共 ' + idx.total + ' 张高质量思考卡，适合家长每天陪伴 5～10 分钟。</p>' +
+        '<div class="hero__badges"><span>4～7岁</span><span>' + idx.category_count + ' 类思维</span><span>4级难度</span><span>完整答案解析</span></div></section>' +
+        '<section class="math-today"><div class="math-today__copy"><span class="math-kicker">今日一起想</span><h2>' + today.icon + ' ' + esc(today.title) + '</h2>' +
+        '<p>' + esc(today.question) + '</p><div class="math-meta"><span>' + esc(today.category) + '</span><span>' + mathDifficulty(today.difficulty) + '</span><span>约 5～10 分钟</span></div></div>' +
+        '<a class="math-primary" href="' + mathQuestionHref(today) + '">开始亲子对话 →</a></section>' +
+        '<section class="math-guide"><span>💡</span><div><strong>家长先别公布答案</strong><p>先问“你为什么这样想？”，再让孩子用家里的积木、豆子、纸片或玩具试一试。</p></div></section>' +
+        '<section class="sec"><div class="sec__head"><div><p class="sec__eyebrow">THINKING TYPES</p><h2>选择思维类型</h2></div><p>' + idx.category_count + ' 类</p></div>' +
+        '<div class="math-cat-grid">' + cats + '</div></section>',
+        "home"
+      );
+      bindSubjectSwitch();
+    }).catch(function () { errView("数学题库加载失败，请检查 data/math 数据文件"); });
+  }
+
+  function renderMathCategory(code, query) {
+    loading(); updateBrand();
+    Promise.all([loadMathIndex(), loadMathQuestions()]).then(function (res) {
+      var idx = res[0], all = res[1], meta = null;
+      idx.categories.forEach(function (c) { if (c.code === code) meta = c; });
+      if (!meta) { errView("未找到这个数学分类"); return; }
+      var level = parseInt(query.level || "0", 10) || 0;
+      var questions = all.filter(function (q) { return q.category_code === code && (!level || q.difficulty === level); });
+      var levelBtns = [0, 1, 2, 3, 4].map(function (n) {
+        var label = n ? n + "级 · " + mathDifficulty(n) : "全部难度";
+        return '<a class="chip' + (level === n ? " is-on" : "") + '" href="#/math/c/' + enc(code) + (n ? "?level=" + n : "") + '">' + label + "</a>";
+      }).join("");
+      var cards = questions.map(function (q) {
+        return '<a class="math-q-card" href="' + mathQuestionHref(q) + '"><span class="math-q-card__icon">' + q.icon + '</span>' +
+          '<span class="math-q-card__main"><span class="math-q-card__top"><strong>' + esc(q.title) + '</strong><i>' + q.difficulty + '级</i></span>' +
+          '<span class="math-q-card__question">' + esc(q.question) + '</span><span class="math-q-card__scene">📍 ' + esc(q.scene) + '</span></span><span class="math-q-card__arrow">›</span></a>';
+      }).join("");
+      show(
+        '<div class="crumbs"><a href="#/">首页</a><i>›</i><a href="#/math">数学</a><i>›</i><span>' + esc(meta.name) + '</span></div>' +
+        '<section class="math-cat-head"><span>' + meta.icon + '</span><div><p>亲子数学思维</p><h1>' + esc(meta.name) + '</h1><small>' + meta.count + ' 张思考卡 · 不追求速度，重视表达过程</small></div></section>' +
+        '<div class="math-level-filter">' + levelBtns + '</div><p class="result-meta">当前 ' + questions.length + ' 张</p>' +
+        '<div class="math-q-list">' + cards + '</div>', ""
+      );
+    }).catch(function () { errView("数学分类加载失败"); });
+  }
+
+  function mathInteractionChoices(q) {
+    var data = q.interaction || {}, choices = data.choices || data.terms || data.representations || [];
+    if (!choices.length) {
+      return '<div class="math-do"><strong>推荐互动方式</strong><div><button type="button" data-math-choice>🧱 摆一摆</button>' +
+        '<button type="button" data-math-choice>🖍️ 画一画</button><button type="button" data-math-choice>💬 说理由</button></div></div>';
+    }
+    return '<div class="math-do"><strong>先听听孩子怎么选</strong><div>' + choices.map(function (c) {
+      return '<button type="button" data-math-choice>' + esc(c) + '</button>';
+    }).join("") + '</div><p class="math-choice-note" aria-live="polite"></p></div>';
+  }
+
+  function renderMathQuestion(id) {
+    loading(); updateBrand();
+    loadMathQuestions().then(function (all) {
+      var index = -1;
+      for (var i = 0; i < all.length; i++) if (all[i].id === id) { index = i; break; }
+      if (index < 0) { errView("未找到这张数学思考卡"); return; }
+      var q = all[index];
+      var same = all.filter(function (item) { return item.category_code === q.category_code; });
+      var sameIndex = same.indexOf(q), prev = same[sameIndex - 1], next = same[sameIndex + 1];
+      var follow = (q.follow_ups || []).map(function (f, idx) {
+        return '<section class="math-reveal"><button type="button" class="math-reveal__head" data-math-reveal><span>' + (idx + 1) + '</span><strong>' + esc(f.round) + '</strong><i>点击展开</i></button>' +
+          '<div class="math-reveal__body"><p>' + esc(f.prompt) + '</p><small>观察目标：' + esc(f.goal) + '</small></div></section>';
+      }).join("");
+      var pager = '<div class="pager">' +
+        (prev ? '<a class="pager__btn" href="' + mathQuestionHref(prev) + '"><span class="pager__label">‹ 上一题</span><span class="pager__name">' + esc(prev.title) + '</span></a>' : '<span></span>') +
+        '<a class="pager__home" href="#/math/c/' + enc(q.category_code) + '">' + esc(q.category) + '</a>' +
+        (next ? '<a class="pager__btn pager__next" href="' + mathQuestionHref(next) + '"><span class="pager__label">下一题 ›</span><span class="pager__name">' + esc(next.title) + '</span></a>' : '<span></span>') + '</div>';
+      show(
+        '<div class="crumbs"><a href="#/">首页</a><i>›</i><a href="#/math">数学</a><i>›</i><a href="#/math/c/' + enc(q.category_code) + '">' + esc(q.category) + '</a></div>' +
+        '<article class="math-card"><div class="math-card__head"><span class="math-card__icon">' + q.icon + '</span><div><p>' + esc(q.scene) + '</p><h1>' + esc(q.title) + '</h1></div>' +
+        '<span class="math-level">' + q.difficulty + '级 · ' + mathDifficulty(q.difficulty) + '</span></div>' +
+        '<div class="math-materials"><strong>准备：</strong>' + q.materials.map(function (m) { return '<span>' + esc(m) + '</span>'; }).join("") + '</div>' +
+        '<section class="math-question"><span>核心问题</span><p>' + esc(q.question) + '</p></section>' +
+        mathInteractionChoices(q) +
+        '<section class="math-parent-script"><span>👨‍👩‍👧 家长怎么说</span><p>' + esc(q.parent_script) + '</p></section>' +
+        '<div class="math-follow">' + follow + '</div>' +
+        '<section class="math-answer"><button type="button" class="math-answer__btn" data-math-answer>孩子说完了，再看答案与解析</button>' +
+        '<div class="math-answer__body"><h2>参考答案</h2><p>' + esc(q.answer) + '</p><h2>思路解析</h2><p>' + esc(q.explanation) + '</p></div></section>' +
+        '<section class="math-notes"><details><summary>孩子可能怎么回答</summary>' + mathArrayHtml(q.possible_responses, "math-bullets") + '</details>' +
+        '<details><summary>家长观察重点</summary>' + mathArrayHtml(q.observation_focus, "math-bullets") + '</details>' +
+        '<details class="math-avoid"><summary>这些话先不要说</summary>' + mathArrayHtml(q.avoid_saying, "math-bullets") + '</details>' +
+        '<details><summary>继续延伸</summary>' + mathArrayHtml(q.extension_questions, "math-bullets") + '</details></section></article>' + pager,
+        ""
+      );
+      view.querySelectorAll("[data-math-choice]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          btn.parentElement.querySelectorAll("button").forEach(function (b) { b.classList.toggle("is-selected", b === btn); });
+          var note = btn.closest(".math-do").querySelector(".math-choice-note");
+          if (note) note.textContent = "已记录孩子的想法。先问一句“为什么？”，再继续往下。";
+        });
+      });
+      view.querySelectorAll("[data-math-reveal]").forEach(function (btn) {
+        btn.addEventListener("click", function () { btn.parentElement.classList.toggle("is-open"); btn.querySelector("i").textContent = btn.parentElement.classList.contains("is-open") ? "收起" : "点击展开"; });
+      });
+      var answerBtn = view.querySelector("[data-math-answer]");
+      if (answerBtn) answerBtn.addEventListener("click", function () { answerBtn.parentElement.classList.toggle("is-open"); answerBtn.textContent = answerBtn.parentElement.classList.contains("is-open") ? "收起答案与解析" : "孩子说完了，再看答案与解析"; });
+    }).catch(function () { errView("数学题目加载失败"); });
+  }
+
+  function renderMathSearch(query) {
+    loading(); updateBrand();
+    buildMathSearchIndex().then(function (list) {
+      var q = query.q || "", level = parseInt(query.level || "0", 10) || 0;
+      show(
+        '<section class="sec" style="margin-top:0"><div class="sec__head"><div><p class="sec__eyebrow">MATH SEARCH</p><h2>查找数学思考卡</h2></div><p>全库 ' + list.length + ' 张</p></div>' +
+        '<div class="filter-panel is-open"><div class="filter-body"><div class="filter-row"><input class="filter-input" id="math-sq" placeholder="场景 / 类型 / 问题…" value="' + esc(q) + '"></div>' +
+        '<div class="fgroup"><span class="fgroup__label">难度</span><div class="fgroup__chips">' + [0, 1, 2, 3, 4].map(function (n) { return '<button class="chip' + (level === n ? ' is-on' : '') + '" data-level="' + n + '">' + (n ? n + '级' : '全部') + '</button>'; }).join('') +
+        '</div></div></div></div><p class="result-meta" id="math-smeta"></p><div class="math-q-list" id="math-slist"></div></section>', "search"
+      );
+      function draw() {
+        var term = q.trim().toLowerCase();
+        var result = list.filter(function (item) {
+          if (level && item.difficulty !== level) return false;
+          return !term || (item.t + ' ' + item.title + ' ' + item.sub + ' ' + item.keywords).toLowerCase().indexOf(term) >= 0;
+        });
+        document.getElementById('math-smeta').textContent = '共 ' + result.length + ' 张';
+        document.getElementById('math-slist').innerHTML = result.slice(0, 300).map(function (item) {
+          return '<a class="math-q-card" href="#/math/q/' + enc(item.id) + '"><span class="math-q-card__icon">' + item.icon + '</span><span class="math-q-card__main">' +
+            '<span class="math-q-card__top"><strong>' + esc(item.title) + '</strong><i>' + item.difficulty + '级</i></span><span class="math-q-card__question">' + esc(item.t) +
+            '</span><span class="math-q-card__scene">' + esc(item.sub) + '</span></span><span class="math-q-card__arrow">›</span></a>';
+        }).join('') || '<div class="empty"><span class="empty__icon">⌕</span>没有找到，换个关键词试试。</div>';
+      }
+      document.getElementById('math-sq').addEventListener('input', function () { q = this.value; draw(); });
+      view.querySelectorAll('[data-level]').forEach(function (btn) { btn.addEventListener('click', function () { level = parseInt(btn.getAttribute('data-level'), 10); view.querySelectorAll('[data-level]').forEach(function (b) { b.classList.toggle('is-on', b === btn); }); draw(); }); });
+      draw();
+    }).catch(function () { errView("数学搜索加载失败"); });
   }
 
   /* ===== 语文首页 ===== */
@@ -826,17 +1114,20 @@
         document.getElementById("smeta").textContent = "共 " + res.length + " 条";
         document.getElementById("slist").innerHTML = res.length ? res.slice(0, 300).map(function (p) {
           if (p.type === "w") {
-            return '<div class="en-word en-word--search"><div class="en-word__head">' +
-              '<span class="en-word__text">' + esc(p.t) + "</span>" +
+            return '<a class="en-word en-word--search" href="#/en/w/' + enc(p.cat) + "?focus=" + enc(p.t.toLowerCase()) + '">' +
+              '<span class="en-item-icon" aria-hidden="true">' + enItemIcon(p.t + " " + p.sub, p.icon) + "</span>" +
+              '<div class="en-item-main"><div class="en-word__head"><span class="en-word__text">' + esc(p.t) + "</span>" +
               '<span class="en-word__phonetic">' + esc(p.sub.split(" ")[0]) + "</span>" +
               '<span class="en-search__cat">' + p.icon + " " + esc(p.cat) + "</span></div>" +
               '<div class="en-word__meta"><span class="en-word__meaning">' + esc(p.sub.split(" ").slice(1).join(" ")) + "</span></div>" +
               '<div class="en-word__example"><span class="en-word__ex-en">' + esc(p.ex || "") + "</span>" +
-              '<span class="en-word__ex-cn">' + esc(p.excn || "") + "</span></div></div>";
+              '<span class="en-word__ex-cn">' + esc(p.excn || "") + "</span></div></div></a>";
           }
-          return '<div class="en-sent"><span class="en-sent__en">' + markEnSentence(p.t, wordMap) + "</span>" +
-            '<span class="en-sent__cn">' + esc(p.sub) + "</span>" +
-            '<span class="en-search__cat">' + p.icon + " " + esc(p.cat) + "</span></div>";
+          return '<a class="en-sent en-sent--search" href="#/en/s/' + enc(p.cat) + "?focus=" + enc(p.t.toLowerCase()) + '">' +
+            '<span class="en-item-icon en-item-icon--sent" aria-hidden="true">' + enItemIcon(p.t + " " + p.sub, p.icon) + "</span>" +
+            '<div class="en-item-main"><span class="en-sent__en">' + markEnSentence(p.t, wordMap) + "</span>" +
+            '<span class="en-sent__cn is-search-visible">' + esc(p.sub) + "</span>" +
+            '<span class="en-search__cat">' + p.icon + " " + esc(p.cat) + "</span></div></a>";
         }).join("") : '<div class="empty"><span class="empty__icon">⌕</span>没有找到，换个关键字试试。</div>';
         document.querySelectorAll(".chip").forEach(function (c) { c.classList.toggle("is-on", F[c.getAttribute("data-f")] === c.getAttribute("data-v")); });
       }
@@ -856,7 +1147,9 @@
   var sPop = document.getElementById("search-pop");
   var sTimer = null;
   function getSearchIndex() {
-    return state.subject === "en" ? buildEnSearchIndex() : buildSearchIndex();
+    if (state.subject === "en") return buildEnSearchIndex();
+    if (state.subject === "math") return buildMathSearchIndex();
+    return buildSearchIndex();
   }
   sInput.addEventListener("input", function () {
     var q = this.value.trim();
@@ -865,17 +1158,23 @@
     sTimer = setTimeout(function () {
       getSearchIndex().then(function (list) {
         var ql = q.toLowerCase();
-        var isEn = state.subject === "en";
+        var isEn = state.subject === "en", isMath = state.subject === "math";
         var hits = list.filter(function (p) {
-          var s = isEn
+          var s = isMath
+            ? (p.t + " " + p.title + " " + p.sub + " " + p.keywords).toLowerCase()
+            : isEn
             ? (p.t + " " + p.sub + " " + (p.ex || "") + " " + (p.excn || "")).toLowerCase()
             : (p.t + " " + p.p + " " + p.d + " " + p.ty + " " + p.th + " " + p.gl).toLowerCase();
           return s.indexOf(ql) >= 0;
         });
-        if (!hits.length) { sPop.innerHTML = '<div class="search-pop__empty">没有找到「' + esc(q) + "」相关" + (isEn ? "内容" : "篇目") + "</div>"; sPop.hidden = false; return; }
+        if (!hits.length) { sPop.innerHTML = '<div class="search-pop__empty">没有找到「' + esc(q) + "」相关" + (isMath ? "思考卡" : isEn ? "内容" : "篇目") + "</div>"; sPop.hidden = false; return; }
         sPop.innerHTML = hits.slice(0, 8).map(function (p) {
+          if (isMath) {
+            return '<div class="search-pop__item" data-math-id="' + esc(p.id) + '"><span class="search-pop__title">' + p.icon + " " + esc(p.title) +
+              '</span><span class="search-pop__meta">' + esc(p.cat) + " · " + p.difficulty + "级</span></div>";
+          }
           if (isEn) {
-            return '<div class="search-pop__item" data-type="' + p.type + '" data-cat="' + esc(p.cat) + '">' +
+            return '<div class="search-pop__item" data-type="' + p.type + '" data-cat="' + esc(p.cat) + '" data-focus="' + esc(p.t.toLowerCase()) + '">' +
               '<span class="search-pop__title">' + esc(p.t) + '</span>' +
               '<span class="search-pop__meta">' + p.icon + " " + esc(p.cat) + " · " + esc(p.sub.split(" ").slice(0, 3).join(" ")) + "</span></div>";
           }
@@ -886,8 +1185,10 @@
         sPop.hidden = false;
         sPop.querySelectorAll(".search-pop__item").forEach(function (el) {
           el.addEventListener("click", function () {
-            if (isEn) {
-              location.hash = "#/en/" + el.getAttribute("data-type") + "/" + enc(el.getAttribute("data-cat"));
+            if (isMath) {
+              location.hash = "#/math/q/" + enc(el.getAttribute("data-math-id"));
+            } else if (isEn) {
+              location.hash = "#/en/" + el.getAttribute("data-type") + "/" + enc(el.getAttribute("data-cat")) + "?focus=" + enc(el.getAttribute("data-focus"));
             } else {
               location.hash = "#/p/" + enc(el.getAttribute("data-g")) + "/" + enc(el.getAttribute("data-t"));
             }
@@ -901,7 +1202,7 @@
     if (e.key === "Enter") {
       var q = this.value.trim();
       if (q) {
-        location.hash = state.subject === "en" ? "#/en/search?q=" + enc(q) : "#/search?q=" + enc(q);
+        location.hash = state.subject === "en" ? "#/en/search?q=" + enc(q) : state.subject === "math" ? "#/math/search?q=" + enc(q) : "#/search?q=" + enc(q);
         sPop.hidden = true; this.blur();
       }
     }
@@ -974,7 +1275,12 @@
 
   /* ---------- 随机 & 回顶 ---------- */
   document.getElementById("random-btn").addEventListener("click", function () {
-    if (state.subject === "en") {
+    if (state.subject === "math") {
+      loadMathQuestions().then(function (questions) {
+        var q = questions[Math.floor(Math.random() * questions.length)];
+        location.hash = "#/math/q/" + enc(q.id);
+      });
+    } else if (state.subject === "en") {
       Promise.all([loadEnWords(), loadEnSentences()]).then(function (res) {
         var cats = [];
         res[0].categories.forEach(function (c) { cats.push({ name: c.name, type: "w" }); });
@@ -1003,14 +1309,25 @@
     var qIdx = h.indexOf("?"), qs = qIdx >= 0 ? parseQuery(h.slice(qIdx + 1)) : {};
     if (qIdx >= 0) h = h.slice(0, qIdx);
     var parts = h.split("/").filter(Boolean).map(dec);
-    document.title = "古诗诵读 · 实用知识库";
+    var routedSubject = parts[0] === "en" ? "en" : parts[0] === "math" ? "math" : (parts[0] === "g" || parts[0] === "p" || parts[0] === "search" ? "zh" : state.subject);
+    if (routedSubject !== state.subject) {
+      state.subject = routedSubject;
+      store.set("subject", routedSubject);
+      sInput.value = "";
+      sPop.hidden = true;
+    }
+    updateBrand();
     if (!parts.length) return renderHome();
     if (parts[0] === "g" && parts[1]) return renderGrade(parts[1], qs);
     if (parts[0] === "p" && parts[1] && parts[2]) return renderPoem(parts[1], parts[2]);
-    if (parts[0] === "en" && parts[1] === "w" && parts[2]) return renderEnWordCat(parts[2]);
-    if (parts[0] === "en" && parts[1] === "s" && parts[2]) return renderEnSentCat(parts[2]);
-    if (parts[0] === "en") return renderEnHome();
     if (parts[0] === "en" && parts[1] === "search") return renderEnSearch(qs);
+    if (parts[0] === "en" && parts[1] === "w" && parts[2]) return renderEnWordCat(parts[2], qs);
+    if (parts[0] === "en" && parts[1] === "s" && parts[2]) return renderEnSentCat(parts[2], qs);
+    if (parts[0] === "en") return renderEnHome();
+    if (parts[0] === "math" && parts[1] === "search") return renderMathSearch(qs);
+    if (parts[0] === "math" && parts[1] === "c" && parts[2]) return renderMathCategory(parts[2], qs);
+    if (parts[0] === "math" && parts[1] === "q" && parts[2]) return renderMathQuestion(parts[2]);
+    if (parts[0] === "math") return renderMathHome();
     if (parts[0] === "search") return renderSearch(qs);
     renderHome();
   }

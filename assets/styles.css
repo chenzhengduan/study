@@ -323,6 +323,24 @@ mark { background: rgba(255, 179, 0, .45); color: inherit; border-radius: 2px; p
 }
 .hero--en::after { content: "ABC"; font-family: -apple-system, "Segoe UI", sans-serif; font-size: 120px; font-weight: 900; }
 
+/* 英语首页内容切换：句子不再排在全部单词分类之后 */
+.en-tabs {
+  position: sticky; top: calc(var(--bar-h) + 8px); z-index: 20;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  padding: 7px; margin: -10px 0 16px; border: 1px solid var(--line);
+  border-radius: 16px; background: color-mix(in srgb, var(--surface) 92%, transparent);
+  box-shadow: var(--shadow); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+}
+.en-tabs__btn {
+  display: flex; align-items: center; justify-content: center; gap: 9px;
+  min-height: 48px; padding: 9px 14px; border: 0; border-radius: 11px;
+  background: transparent; color: var(--ink-3); transition: .18s;
+}
+.en-tabs__btn.is-active { color: #0277bd; background: rgba(2, 136, 209, .12); box-shadow: inset 0 0 0 1px rgba(2, 136, 209, .2); }
+.en-tabs__label { font-size: 15px; font-weight: 800; }
+.en-tabs__count { font-size: 11px; padding: 2px 7px; border-radius: 999px; background: var(--surface); color: inherit; }
+.en-home-body { min-height: 240px; }
+
 /* ---------- 英语分类卡片 ---------- */
 .en-cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
 .en-cat {
@@ -347,10 +365,23 @@ mark { background: rgba(255, 179, 0, .45); color: inherit; border-radius: 2px; p
 /* ---------- 单词卡片 ---------- */
 .en-word-list { display: flex; flex-direction: column; gap: 10px; }
 .en-word {
+  position: relative; display: flex; align-items: flex-start; gap: 13px;
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md);
-  padding: 16px 18px; transition: .15s;
+  padding: 16px 18px; transition: .15s; color: var(--ink);
 }
 .en-word:hover { box-shadow: var(--shadow); border-color: rgba(2, 136, 209, .3); }
+.en-item-icon {
+  display: grid; place-items: center; flex: 0 0 46px; width: 46px; height: 46px;
+  border-radius: 14px; background: rgba(2, 136, 209, .1); font-size: 27px; line-height: 1;
+}
+.en-item-icon--sent { background: rgba(126, 87, 194, .1); }
+.en-item-main { flex: 1; min-width: 0; }
+.en-speak-btn {
+  flex: 0 0 38px; width: 38px; height: 38px; border: 0; border-radius: 50%;
+  background: rgba(2, 136, 209, .1); color: #0277bd; font-size: 16px;
+}
+.en-speak-btn:hover { background: rgba(2, 136, 209, .2); }
+.en-word.is-focused, .en-sent.is-focused { border-color: #0288d1; box-shadow: 0 0 0 4px rgba(2, 136, 209, .15), var(--shadow); }
 .en-word__head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
 .en-word__text { font-size: 22px; font-weight: 800; color: #0288d1; letter-spacing: .5px; }
 .en-word__phonetic { font-size: 13px; color: var(--ink-3); }
@@ -364,12 +395,20 @@ mark { background: rgba(255, 179, 0, .45); color: inherit; border-radius: 2px; p
 /* ---------- 句子卡片 ---------- */
 .en-sent-list { display: flex; flex-direction: column; gap: 8px; }
 .en-sent {
+  display: flex; align-items: flex-start; gap: 13px;
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-sm);
-  padding: 14px 16px; transition: .15s;
+  padding: 14px 16px; transition: .15s; color: var(--ink);
 }
 .en-sent:hover { box-shadow: var(--shadow); border-color: rgba(2, 136, 209, .3); }
 .en-sent__en { display: block; font-size: 16.5px; font-weight: 600; color: var(--ink); line-height: 1.5; }
-.en-sent__cn { display: block; font-size: 13.5px; color: var(--ink-3); margin-top: 3px; }
+.en-sent__cn { display: none; font-size: 13.5px; color: var(--ink-3); margin-top: 5px; }
+.en-sent.is-cn-shown .en-sent__cn, .en-sent__cn.is-search-visible { display: block; }
+.en-sent__actions { display: flex; gap: 7px; margin-top: 9px; }
+.en-sent__actions button {
+  border: 1px solid rgba(2, 136, 209, .24); border-radius: 999px; padding: 5px 10px;
+  color: #0277bd; background: rgba(2, 136, 209, .07); font-size: 12px;
+}
+.en-sent--search { align-items: center; }
 
 /* 英语搜索结果 */
 .en-search-list { display: flex; flex-direction: column; gap: 10px; }
@@ -398,6 +437,103 @@ mark { background: rgba(255, 179, 0, .45); color: inherit; border-radius: 2px; p
 .en-word-pop__phonetic { display: block; font-size: 12.5px; color: var(--ink-3); margin-bottom: 4px; }
 .en-word-pop__pos { display: inline-block; font-size: 11px; color: var(--ink-3); font-style: italic; margin-right: 6px; }
 .en-word-pop__meaning { display: inline; font-size: 14px; font-weight: 600; color: var(--ink); }
+
+/* ---------- 亲子数学 ---------- */
+.hero--math { background: linear-gradient(135deg, #7e57c2 0%, #5e35b1 48%, #3949ab 100%); box-shadow: 0 16px 40px rgba(94, 53, 177, .3); }
+.hero--math::after { content: "123"; font-family: -apple-system, "Segoe UI", sans-serif; font-size: 132px; bottom: -28px; }
+.math-kicker { display: inline-block; color: #5e35b1; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
+.math-today {
+  display: flex; align-items: center; gap: 24px; margin: 0 0 14px; padding: 22px 24px;
+  background: linear-gradient(135deg, rgba(126, 87, 194, .13), rgba(57, 73, 171, .05));
+  border: 1px solid rgba(94, 53, 177, .22); border-radius: var(--r-lg);
+}
+.math-today__copy { flex: 1; min-width: 0; }
+.math-today h2 { margin: 4px 0 6px; font-size: 22px; }
+.math-today p { margin: 0; color: var(--ink-2); font-size: 15px; line-height: 1.75; }
+.math-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 11px; }
+.math-meta span { padding: 3px 9px; border-radius: 999px; background: var(--surface); color: var(--ink-3); font-size: 11px; }
+.math-primary {
+  flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; min-height: 44px;
+  padding: 0 17px; border-radius: 999px; background: #5e35b1; color: #fff; font-size: 13px; font-weight: 800;
+  box-shadow: 0 8px 18px rgba(94, 53, 177, .24);
+}
+.math-guide { display: flex; align-items: flex-start; gap: 12px; padding: 14px 17px; border-radius: var(--r-md); background: rgba(255, 179, 0, .1); border: 1px solid rgba(255, 179, 0, .24); }
+.math-guide > span { font-size: 22px; }
+.math-guide strong { display: block; font-size: 14px; }
+.math-guide p { margin: 2px 0 0; color: var(--ink-2); font-size: 13px; }
+.math-cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 11px; }
+.math-cat { display: flex; align-items: center; gap: 12px; padding: 15px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); color: var(--ink); transition: .18s; }
+.math-cat:hover { transform: translateY(-2px); border-color: rgba(94, 53, 177, .35); box-shadow: var(--shadow); }
+.math-cat__icon { display: grid; place-items: center; width: 44px; height: 44px; flex: 0 0 44px; border-radius: 14px; background: rgba(94, 53, 177, .1); font-size: 24px; }
+.math-cat__body { display: flex; flex: 1; flex-direction: column; min-width: 0; }
+.math-cat__body strong { font-size: 15px; }
+.math-cat__body small { color: var(--ink-3); font-size: 11px; }
+.math-cat__arrow, .math-q-card__arrow { color: var(--ink-3); font-size: 21px; }
+.math-cat-head { display: flex; align-items: center; gap: 16px; margin: 6px 0 18px; padding: 20px 22px; border-radius: var(--r-lg); background: linear-gradient(135deg, rgba(126, 87, 194, .14), rgba(57, 73, 171, .05)); }
+.math-cat-head > span { font-size: 44px; }
+.math-cat-head p, .math-cat-head h1, .math-cat-head small { margin: 0; }
+.math-cat-head p { color: #5e35b1; font-size: 11px; font-weight: 800; letter-spacing: 2px; }
+.math-cat-head h1 { font-size: 27px; }
+.math-cat-head small { color: var(--ink-3); }
+.math-level-filter { display: flex; gap: 7px; overflow-x: auto; padding: 2px 1px 8px; scrollbar-width: none; }
+.math-level-filter::-webkit-scrollbar { display: none; }
+.math-level-filter .chip { flex-shrink: 0; }
+.math-q-list { display: flex; flex-direction: column; gap: 9px; }
+.math-q-card { display: flex; align-items: center; gap: 13px; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); color: var(--ink); transition: .16s; }
+.math-q-card:hover { border-color: rgba(94, 53, 177, .35); box-shadow: var(--shadow); }
+.math-q-card__icon { display: grid; place-items: center; width: 42px; height: 42px; flex: 0 0 42px; border-radius: 13px; background: rgba(94, 53, 177, .1); font-size: 23px; }
+.math-q-card__main { flex: 1; min-width: 0; }
+.math-q-card__top { display: flex; align-items: center; gap: 8px; }
+.math-q-card__top strong { font-size: 14px; }
+.math-q-card__top i { padding: 1px 6px; border-radius: 999px; background: var(--surface-2); color: var(--ink-3); font-size: 10px; font-style: normal; }
+.math-q-card__question { display: -webkit-box; margin-top: 3px; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; color: var(--ink-2); font-size: 13px; line-height: 1.55; }
+.math-q-card__scene { display: block; margin-top: 4px; color: var(--ink-3); font-size: 11px; }
+
+.math-card { max-width: 760px; margin: 0 auto; }
+.math-card__head { display: flex; align-items: center; gap: 14px; margin: 4px 0 14px; padding: 18px 20px; border-radius: var(--r-lg); background: linear-gradient(135deg, rgba(126, 87, 194, .16), rgba(57, 73, 171, .06)); }
+.math-card__icon { font-size: 40px; }
+.math-card__head div { flex: 1; min-width: 0; }
+.math-card__head p, .math-card__head h1 { margin: 0; }
+.math-card__head p { color: var(--ink-3); font-size: 12px; }
+.math-card__head h1 { font-size: 25px; }
+.math-level { flex-shrink: 0; padding: 5px 10px; border-radius: 999px; background: var(--surface); color: #5e35b1; font-size: 11px; font-weight: 700; }
+.math-materials { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; color: var(--ink-3); font-size: 12px; }
+.math-materials span { padding: 3px 9px; border-radius: 999px; background: var(--surface-2); color: var(--ink-2); }
+.math-question { padding: 22px; border-radius: var(--r-lg); background: var(--surface); border: 2px solid rgba(94, 53, 177, .25); box-shadow: var(--shadow); }
+.math-question > span { color: #5e35b1; font-size: 11px; font-weight: 800; letter-spacing: 2px; }
+.math-question p { margin: 7px 0 0; font-size: 20px; font-weight: 700; line-height: 1.75; }
+.math-do { margin: 12px 0; padding: 14px 16px; border-radius: var(--r-md); background: rgba(94, 53, 177, .06); }
+.math-do strong { display: block; margin-bottom: 8px; font-size: 13px; }
+.math-do > div { display: flex; flex-wrap: wrap; gap: 7px; }
+.math-do button { border: 1px solid rgba(94, 53, 177, .22); border-radius: 999px; padding: 7px 12px; background: var(--surface); color: var(--ink-2); font-size: 12px; }
+.math-do button.is-selected { color: #fff; background: #5e35b1; border-color: #5e35b1; }
+.math-choice-note { margin: 8px 0 0; color: #5e35b1; font-size: 12px; }
+.math-parent-script { margin: 12px 0; padding: 16px 18px; border-left: 4px solid var(--amber); border-radius: 0 var(--r-md) var(--r-md) 0; background: rgba(255, 179, 0, .09); }
+.math-parent-script span { font-size: 12px; font-weight: 800; }
+.math-parent-script p { margin: 5px 0 0; color: var(--ink-2); }
+.math-follow { display: flex; flex-direction: column; gap: 8px; }
+.math-reveal { border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); overflow: hidden; }
+.math-reveal__head { display: flex; align-items: center; gap: 9px; width: 100%; padding: 13px 15px; border: 0; background: transparent; color: var(--ink); text-align: left; }
+.math-reveal__head > span { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: rgba(94, 53, 177, .12); color: #5e35b1; font-size: 11px; font-weight: 800; }
+.math-reveal__head strong { flex: 1; }
+.math-reveal__head i { color: var(--ink-3); font-size: 11px; font-style: normal; }
+.math-reveal__body { display: none; padding: 0 16px 15px 49px; }
+.math-reveal.is-open .math-reveal__body { display: block; }
+.math-reveal__body p { margin: 0 0 5px; font-size: 15px; }
+.math-reveal__body small { color: var(--ink-3); }
+.math-answer { margin-top: 14px; }
+.math-answer__btn { width: 100%; min-height: 48px; border: 0; border-radius: var(--r-md); background: #5e35b1; color: #fff; font-weight: 800; }
+.math-answer__body { display: none; padding: 18px 20px; border: 1px solid rgba(94, 53, 177, .2); border-top: 0; border-radius: 0 0 var(--r-md) var(--r-md); background: var(--surface); }
+.math-answer.is-open .math-answer__body { display: block; }
+.math-answer__body h2 { margin: 0 0 5px; color: #5e35b1; font-size: 15px; }
+.math-answer__body h2:not(:first-child) { margin-top: 14px; }
+.math-answer__body p { margin: 0; color: var(--ink-2); line-height: 1.8; }
+.math-notes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.math-notes details { padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); }
+.math-notes summary { cursor: pointer; font-size: 13px; font-weight: 700; }
+.math-notes .math-avoid { border-color: rgba(239, 83, 80, .22); }
+.math-bullets { margin: 9px 0 0; padding-left: 18px; color: var(--ink-2); font-size: 12px; }
+.math-bullets li + li { margin-top: 5px; }
 
 /* ---------- 底部 Tab ---------- */
 .tab-bar {
@@ -599,6 +735,34 @@ body.gsheet-open { overflow: hidden; }
   .en-detail__head h1 { font-size: 22px; }
   .en-word__text { font-size: 19px; }
   .en-sent__en { font-size: 15px; }
+  .en-tabs { top: calc(var(--bar-h) + 5px); margin-top: -6px; padding: 5px; }
+  .en-tabs__btn { min-height: 43px; padding: 7px 9px; gap: 5px; }
+  .en-tabs__label { font-size: 13px; }
+  .en-tabs__count { font-size: 10px; }
+  .en-word, .en-sent { padding: 13px 12px; gap: 10px; }
+  .en-item-icon { width: 40px; height: 40px; flex-basis: 40px; font-size: 23px; }
+  .en-speak-btn { width: 34px; height: 34px; flex-basis: 34px; }
+  /* 数学 */
+  .math-today { align-items: stretch; flex-direction: column; gap: 14px; padding: 18px; }
+  .math-today h2 { font-size: 19px; }
+  .math-primary { width: 100%; }
+  .math-cat-grid { grid-template-columns: repeat(2, 1fr); gap: 9px; }
+  .math-cat { align-items: flex-start; flex-direction: column; gap: 8px; padding: 13px; }
+  .math-cat__icon { width: 39px; height: 39px; flex-basis: 39px; font-size: 22px; }
+  .math-cat__arrow { display: none; }
+  .math-cat-head { padding: 16px; }
+  .math-cat-head > span { font-size: 36px; }
+  .math-cat-head h1 { font-size: 23px; }
+  .math-q-card { padding: 12px; gap: 10px; }
+  .math-q-card__icon { width: 38px; height: 38px; flex-basis: 38px; }
+  .math-card__head { align-items: flex-start; flex-wrap: wrap; padding: 15px; }
+  .math-card__icon { font-size: 34px; }
+  .math-card__head h1 { font-size: 22px; }
+  .math-level { margin-left: 50px; margin-top: -10px; }
+  .math-question { padding: 18px 16px; }
+  .math-question p { font-size: 18px; }
+  .math-reveal__body { padding-left: 16px; }
+  .math-notes { grid-template-columns: 1fr; }
 }
 
 /* ---------- 桌面适配 ---------- */
