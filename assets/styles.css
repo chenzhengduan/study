@@ -40,8 +40,8 @@ button { font-family: inherit; cursor: pointer; }
 }
 .app-bar__brand { display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
 .app-bar__logo {
-  width: 32px; height: 32px; border-radius: 9px; background: var(--grad);
-  color: #fff; font-weight: 800; display: grid; place-items: center; font-size: 17px;
+  min-width: 32px; height: 32px; padding: 0 6px; border-radius: 9px; background: var(--grad);
+  color: #fff; font-weight: 800; display: grid; place-items: center; font-size: 15px;
   box-shadow: 0 4px 12px rgba(244, 81, 30, .4);
 }
 .app-bar__name { font-weight: 700; font-size: 16px; letter-spacing: .5px; color: var(--ink); }

@@ -184,6 +184,19 @@
   }
 
   /* ===== 学科切换 ===== */
+  function updateBrand() {
+    var logo = document.querySelector(".app-bar__logo");
+    var name = document.querySelector(".app-bar__name");
+    if (state.subject === "en") {
+      if (logo) logo.textContent = "En";
+      if (name) name.textContent = "英语启蒙";
+      document.title = "英语启蒙 · 实用知识库";
+    } else {
+      if (logo) logo.textContent = "诗";
+      if (name) name.textContent = "古诗诵读";
+      document.title = "古诗诵读 · 实用知识库";
+    }
+  }
   function subjectSwitchHtml() {
     return '<div class="subject-switch">' +
       '<button class="subject-switch__btn' + (state.subject === "zh" ? " is-active" : "") + '" data-subject="zh">语文</button>' +
@@ -196,6 +209,7 @@
         var s = btn.getAttribute("data-subject");
         if (s === state.subject) return;
         state.subject = s; store.set("subject", s);
+        updateBrand();
         renderHome();
       });
     });
@@ -203,6 +217,7 @@
 
   /* ===== 首页（学科分发） ===== */
   function renderHome() {
+    updateBrand();
     if (state.subject === "en") return renderEnHome();
     renderZhHome();
   }
@@ -247,6 +262,7 @@
   /* ===== 英语分类详情 ===== */
   function renderEnWordCat(catName) {
     loading();
+    updateBrand();
     loadEnWords().then(function (data) {
       var cat = null;
       data.categories.forEach(function (c) { if (c.name === catName) cat = c; });
@@ -273,6 +289,7 @@
 
   function renderEnSentCat(catName) {
     loading();
+    updateBrand();
     loadEnSentences().then(function (data) {
       var cat = null;
       data.categories.forEach(function (c) { if (c.name === catName) cat = c; });
