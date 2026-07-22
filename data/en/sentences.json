@@ -1,0 +1,550 @@
+{
+  "categories": [
+    {
+      "name": "日常问候",
+      "icon": "👋",
+      "sentences": [
+        {
+          "en": "Good morning!",
+          "cn": "早上好！"
+        },
+        {
+          "en": "Good afternoon!",
+          "cn": "下午好！"
+        },
+        {
+          "en": "Good evening!",
+          "cn": "晚上好！"
+        },
+        {
+          "en": "Good night!",
+          "cn": "晚安！"
+        },
+        {
+          "en": "How are you?",
+          "cn": "你好吗？"
+        },
+        {
+          "en": "I'm fine, thank you.",
+          "cn": "我很好，谢谢。"
+        },
+        {
+          "en": "Nice to meet you.",
+          "cn": "很高兴认识你。"
+        },
+        {
+          "en": "What's your name?",
+          "cn": "你叫什么名字？"
+        },
+        {
+          "en": "My name is Tom.",
+          "cn": "我叫汤姆。"
+        },
+        {
+          "en": "See you tomorrow!",
+          "cn": "明天见！"
+        }
+      ]
+    },
+    {
+      "name": "天气",
+      "icon": "🌤️",
+      "sentences": [
+        {
+          "en": "It's sunny today.",
+          "cn": "今天是晴天。"
+        },
+        {
+          "en": "It's raining.",
+          "cn": "在下雨。"
+        },
+        {
+          "en": "It's windy.",
+          "cn": "有风。"
+        },
+        {
+          "en": "It's cloudy.",
+          "cn": "多云。"
+        },
+        {
+          "en": "It's snowing.",
+          "cn": "在下雪。"
+        },
+        {
+          "en": "It's hot today.",
+          "cn": "今天很热。"
+        },
+        {
+          "en": "It's cold today.",
+          "cn": "今天很冷。"
+        },
+        {
+          "en": "The weather is nice.",
+          "cn": "天气真好。"
+        }
+      ]
+    },
+    {
+      "name": "日期时间",
+      "icon": "🕐",
+      "sentences": [
+        {
+          "en": "What day is today?",
+          "cn": "今天星期几？"
+        },
+        {
+          "en": "Today is Monday.",
+          "cn": "今天是星期一。"
+        },
+        {
+          "en": "What time is it?",
+          "cn": "现在几点了？"
+        },
+        {
+          "en": "It's three o'clock.",
+          "cn": "三点了。"
+        },
+        {
+          "en": "It's time for bed.",
+          "cn": "该睡觉了。"
+        },
+        {
+          "en": "It's time for lunch.",
+          "cn": "该吃午饭了。"
+        },
+        {
+          "en": "What's the date today?",
+          "cn": "今天几号？"
+        },
+        {
+          "en": "Hurry up!",
+          "cn": "快点！"
+        }
+      ]
+    },
+    {
+      "name": "学习",
+      "icon": "📖",
+      "sentences": [
+        {
+          "en": "I like reading books.",
+          "cn": "我喜欢读书。"
+        },
+        {
+          "en": "Can you help me?",
+          "cn": "你能帮帮我吗？"
+        },
+        {
+          "en": "I don't understand.",
+          "cn": "我不明白。"
+        },
+        {
+          "en": "Let me try.",
+          "cn": "让我试试。"
+        },
+        {
+          "en": "I did it!",
+          "cn": "我做到了！"
+        },
+        {
+          "en": "Please say it again.",
+          "cn": "请再说一遍。"
+        },
+        {
+          "en": "Good job!",
+          "cn": "做得好！"
+        },
+        {
+          "en": "Raise your hand.",
+          "cn": "举手。"
+        },
+        {
+          "en": "Open your book.",
+          "cn": "打开书。"
+        },
+        {
+          "en": "Listen carefully.",
+          "cn": "认真听。"
+        }
+      ]
+    },
+    {
+      "name": "日常生活",
+      "icon": "🏠",
+      "sentences": [
+        {
+          "en": "I'm hungry.",
+          "cn": "我饿了。"
+        },
+        {
+          "en": "I'm thirsty.",
+          "cn": "我渴了。"
+        },
+        {
+          "en": "Let's play together.",
+          "cn": "我们一起玩吧。"
+        },
+        {
+          "en": "I'm tired.",
+          "cn": "我累了。"
+        },
+        {
+          "en": "Time to get up.",
+          "cn": "该起床了。"
+        },
+        {
+          "en": "Wash your hands.",
+          "cn": "洗洗手。"
+        },
+        {
+          "en": "Brush your teeth.",
+          "cn": "刷刷牙。"
+        },
+        {
+          "en": "Put on your shoes.",
+          "cn": "穿上鞋子。"
+        },
+        {
+          "en": "Dinner is ready.",
+          "cn": "晚饭好了。"
+        },
+        {
+          "en": "Clean up your room.",
+          "cn": "收拾房间。"
+        }
+      ]
+    },
+    {
+      "name": "吃饭",
+      "icon": "🍽️",
+      "sentences": [
+        {
+          "en": "It's time for breakfast.",
+          "cn": "该吃早饭了。"
+        },
+        {
+          "en": "I want some rice.",
+          "cn": "我想要米饭。"
+        },
+        {
+          "en": "Can I have some water?",
+          "cn": "能给我点水吗？"
+        },
+        {
+          "en": "This is delicious!",
+          "cn": "真好吃！"
+        },
+        {
+          "en": "I'm full.",
+          "cn": "我吃饱了。"
+        },
+        {
+          "en": "Eat your vegetables.",
+          "cn": "吃蔬菜。"
+        },
+        {
+          "en": "Don't waste food.",
+          "cn": "不要浪费食物。"
+        }
+      ]
+    },
+    {
+      "name": "玩耍游戏",
+      "icon": "🎮",
+      "sentences": [
+        {
+          "en": "Let's play hide and seek.",
+          "cn": "我们玩捉迷藏吧。"
+        },
+        {
+          "en": "Catch me!",
+          "cn": "来抓我呀！"
+        },
+        {
+          "en": "Let's go to the park.",
+          "cn": "我们去公园吧。"
+        },
+        {
+          "en": "I want to play on the swing.",
+          "cn": "我想荡秋千。"
+        },
+        {
+          "en": "Let's ride bikes.",
+          "cn": "我们骑车吧。"
+        },
+        {
+          "en": "It's my turn.",
+          "cn": "轮到我了。"
+        },
+        {
+          "en": "That's not fair!",
+          "cn": "那不公平！"
+        },
+        {
+          "en": "I win!",
+          "cn": "我赢了！"
+        }
+      ]
+    },
+    {
+      "name": "睡前",
+      "icon": "🌙",
+      "sentences": [
+        {
+          "en": "Time for bed.",
+          "cn": "该睡觉了。"
+        },
+        {
+          "en": "Read me a story.",
+          "cn": "给我讲个故事。"
+        },
+        {
+          "en": "I don't want to sleep.",
+          "cn": "我不想睡。"
+        },
+        {
+          "en": "Sweet dreams!",
+          "cn": "做个好梦！"
+        },
+        {
+          "en": "Good night, Mom.",
+          "cn": "晚安，妈妈。"
+        },
+        {
+          "en": "Can I have some water?",
+          "cn": "我能喝点水吗？"
+        }
+      ]
+    },
+    {
+      "name": "情感表达",
+      "icon": "❤️",
+      "sentences": [
+        {
+          "en": "I'm happy!",
+          "cn": "我很开心！"
+        },
+        {
+          "en": "I'm sad.",
+          "cn": "我很难过。"
+        },
+        {
+          "en": "I love you.",
+          "cn": "我爱你。"
+        },
+        {
+          "en": "Don't be afraid.",
+          "cn": "别害怕。"
+        },
+        {
+          "en": "It's okay.",
+          "cn": "没关系。"
+        },
+        {
+          "en": "I'm excited!",
+          "cn": "我好兴奋！"
+        },
+        {
+          "en": "I miss you.",
+          "cn": "我想你。"
+        },
+        {
+          "en": "Don't cry.",
+          "cn": "别哭。"
+        }
+      ]
+    },
+    {
+      "name": "礼貌用语",
+      "icon": "🙏",
+      "sentences": [
+        {
+          "en": "Please.",
+          "cn": "请。"
+        },
+        {
+          "en": "Thank you.",
+          "cn": "谢谢你。"
+        },
+        {
+          "en": "You're welcome.",
+          "cn": "不客气。"
+        },
+        {
+          "en": "I'm sorry.",
+          "cn": "对不起。"
+        },
+        {
+          "en": "Excuse me.",
+          "cn": "打扰一下。"
+        },
+        {
+          "en": "May I come in?",
+          "cn": "我可以进来吗？"
+        },
+        {
+          "en": "Bless you!",
+          "cn": "祝福你！（打喷嚏后说）"
+        },
+        {
+          "en": "After you.",
+          "cn": "您先请。"
+        }
+      ]
+    },
+    {
+      "name": "在学校",
+      "icon": "🏫",
+      "sentences": [
+        {
+          "en": "Time for class.",
+          "cn": "上课了。"
+        },
+        {
+          "en": "Stand up, please.",
+          "cn": "请起立。"
+        },
+        {
+          "en": "Sit down, please.",
+          "cn": "请坐下。"
+        },
+        {
+          "en": "Line up, please.",
+          "cn": "请排队。"
+        },
+        {
+          "en": "Let's go to school.",
+          "cn": "我们去上学吧。"
+        },
+        {
+          "en": "School is over.",
+          "cn": "放学了。"
+        },
+        {
+          "en": "See you at school.",
+          "cn": "学校见。"
+        }
+      ]
+    },
+    {
+      "name": "在公园",
+      "icon": "🌳",
+      "sentences": [
+        {
+          "en": "Look at the flowers!",
+          "cn": "看那些花！"
+        },
+        {
+          "en": "Let's feed the ducks.",
+          "cn": "我们喂鸭子吧。"
+        },
+        {
+          "en": "The grass is green.",
+          "cn": "草是绿色的。"
+        },
+        {
+          "en": "I can see a bird.",
+          "cn": "我看到一只鸟。"
+        },
+        {
+          "en": "Let's have a picnic.",
+          "cn": "我们野餐吧。"
+        },
+        {
+          "en": "The park is beautiful.",
+          "cn": "公园很美。"
+        }
+      ]
+    },
+    {
+      "name": "在动物园",
+      "icon": "🐘",
+      "sentences": [
+        {
+          "en": "Look at the elephant!",
+          "cn": "看那头大象！"
+        },
+        {
+          "en": "The monkey is funny.",
+          "cn": "猴子真有趣。"
+        },
+        {
+          "en": "I see a big tiger.",
+          "cn": "我看到一只大老虎。"
+        },
+        {
+          "en": "The panda is so cute.",
+          "cn": "熊猫好可爱。"
+        },
+        {
+          "en": "Let's go to the zoo.",
+          "cn": "我们去动物园吧。"
+        },
+        {
+          "en": "The giraffe is very tall.",
+          "cn": "长颈鹿好高。"
+        }
+      ]
+    },
+    {
+      "name": "赞美鼓励",
+      "icon": "👏",
+      "sentences": [
+        {
+          "en": "You're great!",
+          "cn": "你真棒！"
+        },
+        {
+          "en": "Well done!",
+          "cn": "做得好！"
+        },
+        {
+          "en": "Good boy!",
+          "cn": "好孩子！"
+        },
+        {
+          "en": "You can do it!",
+          "cn": "你能行的！"
+        },
+        {
+          "en": "Keep trying!",
+          "cn": "继续加油！"
+        },
+        {
+          "en": "I'm proud of you.",
+          "cn": "我为你骄傲。"
+        }
+      ]
+    },
+    {
+      "name": "安全提醒",
+      "icon": "⚠️",
+      "sentences": [
+        {
+          "en": "Be careful!",
+          "cn": "小心！"
+        },
+        {
+          "en": "Don't run!",
+          "cn": "不要跑！"
+        },
+        {
+          "en": "Watch out!",
+          "cn": "注意！"
+        },
+        {
+          "en": "Stay close to me.",
+          "cn": "跟紧我。"
+        },
+        {
+          "en": "Don't touch that.",
+          "cn": "不要碰那个。"
+        },
+        {
+          "en": "Look both ways.",
+          "cn": "左右看。"
+        }
+      ]
+    }
+  ]
+}

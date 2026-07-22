@@ -1,0 +1,1146 @@
+{
+  "categories": [
+    {
+      "name": "水果",
+      "icon": "🍎",
+      "words": [
+        {
+          "word": "apple",
+          "phonetic": "/ˈæpl/",
+          "pos": "n.",
+          "meaning": "苹果",
+          "example": "I like apples.",
+          "example_cn": "我喜欢苹果。"
+        },
+        {
+          "word": "banana",
+          "phonetic": "/bəˈnɑːnə/",
+          "pos": "n.",
+          "meaning": "香蕉",
+          "example": "Bananas are yellow.",
+          "example_cn": "香蕉是黄色的。"
+        },
+        {
+          "word": "orange",
+          "phonetic": "/ˈɒrɪndʒ/",
+          "pos": "n.",
+          "meaning": "橙子",
+          "example": "The orange is sweet.",
+          "example_cn": "橙子很甜。"
+        },
+        {
+          "word": "grape",
+          "phonetic": "/ɡreɪp/",
+          "pos": "n.",
+          "meaning": "葡萄",
+          "example": "Grapes are purple.",
+          "example_cn": "葡萄是紫色的。"
+        },
+        {
+          "word": "watermelon",
+          "phonetic": "/ˈwɔːtəmelən/",
+          "pos": "n.",
+          "meaning": "西瓜",
+          "example": "Watermelon is big.",
+          "example_cn": "西瓜很大。"
+        },
+        {
+          "word": "strawberry",
+          "phonetic": "/ˈstrɔːbəri/",
+          "pos": "n.",
+          "meaning": "草莓",
+          "example": "I love strawberries.",
+          "example_cn": "我爱吃草莓。"
+        }
+      ]
+    },
+    {
+      "name": "蔬菜",
+      "icon": "🥕",
+      "words": [
+        {
+          "word": "carrot",
+          "phonetic": "/ˈkærət/",
+          "pos": "n.",
+          "meaning": "胡萝卜",
+          "example": "Rabbits eat carrots.",
+          "example_cn": "兔子吃胡萝卜。"
+        },
+        {
+          "word": "tomato",
+          "phonetic": "/təˈmɑːtəʊ/",
+          "pos": "n.",
+          "meaning": "西红柿",
+          "example": "The tomato is red.",
+          "example_cn": "西红柿是红色的。"
+        },
+        {
+          "word": "potato",
+          "phonetic": "/pəˈteɪtəʊ/",
+          "pos": "n.",
+          "meaning": "土豆",
+          "example": "I like potatoes.",
+          "example_cn": "我喜欢土豆。"
+        },
+        {
+          "word": "cucumber",
+          "phonetic": "/ˈkjuːkʌmbə/",
+          "pos": "n.",
+          "meaning": "黄瓜",
+          "example": "Cucumbers are green.",
+          "example_cn": "黄瓜是绿色的。"
+        },
+        {
+          "word": "corn",
+          "phonetic": "/kɔːn/",
+          "pos": "n.",
+          "meaning": "玉米",
+          "example": "Corn is yellow.",
+          "example_cn": "玉米是黄色的。"
+        }
+      ]
+    },
+    {
+      "name": "动物",
+      "icon": "🐱",
+      "words": [
+        {
+          "word": "cat",
+          "phonetic": "/kæt/",
+          "pos": "n.",
+          "meaning": "猫",
+          "example": "The cat is cute.",
+          "example_cn": "这只猫很可爱。"
+        },
+        {
+          "word": "dog",
+          "phonetic": "/dɒɡ/",
+          "pos": "n.",
+          "meaning": "狗",
+          "example": "Dogs are friendly.",
+          "example_cn": "狗很友好。"
+        },
+        {
+          "word": "rabbit",
+          "phonetic": "/ˈræbɪt/",
+          "pos": "n.",
+          "meaning": "兔子",
+          "example": "The rabbit jumps.",
+          "example_cn": "兔子蹦蹦跳。"
+        },
+        {
+          "word": "bird",
+          "phonetic": "/bɜːd/",
+          "pos": "n.",
+          "meaning": "鸟",
+          "example": "The bird can fly.",
+          "example_cn": "鸟会飞。"
+        },
+        {
+          "word": "fish",
+          "phonetic": "/fɪʃ/",
+          "pos": "n.",
+          "meaning": "鱼",
+          "example": "Fish swim in water.",
+          "example_cn": "鱼在水里游。"
+        },
+        {
+          "word": "duck",
+          "phonetic": "/dʌk/",
+          "pos": "n.",
+          "meaning": "鸭子",
+          "example": "The duck says quack.",
+          "example_cn": "鸭子嘎嘎叫。"
+        }
+      ]
+    },
+    {
+      "name": "野生动物",
+      "icon": "🦁",
+      "words": [
+        {
+          "word": "lion",
+          "phonetic": "/ˈlaɪən/",
+          "pos": "n.",
+          "meaning": "狮子",
+          "example": "The lion is the king.",
+          "example_cn": "狮子是兽中之王。"
+        },
+        {
+          "word": "elephant",
+          "phonetic": "/ˈelɪfənt/",
+          "pos": "n.",
+          "meaning": "大象",
+          "example": "The elephant has a long nose.",
+          "example_cn": "大象有长鼻子。"
+        },
+        {
+          "word": "monkey",
+          "phonetic": "/ˈmʌŋki/",
+          "pos": "n.",
+          "meaning": "猴子",
+          "example": "The monkey likes bananas.",
+          "example_cn": "猴子喜欢香蕉。"
+        },
+        {
+          "word": "panda",
+          "phonetic": "/ˈpændə/",
+          "pos": "n.",
+          "meaning": "熊猫",
+          "example": "Pandas eat bamboo.",
+          "example_cn": "熊猫吃竹子。"
+        },
+        {
+          "word": "tiger",
+          "phonetic": "/ˈtaɪɡə/",
+          "pos": "n.",
+          "meaning": "老虎",
+          "example": "The tiger is strong.",
+          "example_cn": "老虎很强壮。"
+        },
+        {
+          "word": "giraffe",
+          "phonetic": "/dʒɪˈrɑːf/",
+          "pos": "n.",
+          "meaning": "长颈鹿",
+          "example": "The giraffe is very tall.",
+          "example_cn": "长颈鹿很高。"
+        }
+      ]
+    },
+    {
+      "name": "昆虫",
+      "icon": "🦋",
+      "words": [
+        {
+          "word": "butterfly",
+          "phonetic": "/ˈbʌtəflaɪ/",
+          "pos": "n.",
+          "meaning": "蝴蝶",
+          "example": "The butterfly is beautiful.",
+          "example_cn": "蝴蝶很漂亮。"
+        },
+        {
+          "word": "bee",
+          "phonetic": "/biː/",
+          "pos": "n.",
+          "meaning": "蜜蜂",
+          "example": "Bees make honey.",
+          "example_cn": "蜜蜂酿蜜。"
+        },
+        {
+          "word": "ant",
+          "phonetic": "/ænt/",
+          "pos": "n.",
+          "meaning": "蚂蚁",
+          "example": "Ants work hard.",
+          "example_cn": "蚂蚁很勤劳。"
+        },
+        {
+          "word": "ladybug",
+          "phonetic": "/ˈleɪdibʌɡ/",
+          "pos": "n.",
+          "meaning": "瓢虫",
+          "example": "The ladybug has spots.",
+          "example_cn": "瓢虫有斑点。"
+        }
+      ]
+    },
+    {
+      "name": "交通工具",
+      "icon": "🚗",
+      "words": [
+        {
+          "word": "car",
+          "phonetic": "/kɑː/",
+          "pos": "n.",
+          "meaning": "小汽车",
+          "example": "Dad drives a car.",
+          "example_cn": "爸爸开车。"
+        },
+        {
+          "word": "bus",
+          "phonetic": "/bʌs/",
+          "pos": "n.",
+          "meaning": "公交车",
+          "example": "I go by bus.",
+          "example_cn": "我坐公交车去。"
+        },
+        {
+          "word": "bike",
+          "phonetic": "/baɪk/",
+          "pos": "n.",
+          "meaning": "自行车",
+          "example": "I ride my bike.",
+          "example_cn": "我骑自行车。"
+        },
+        {
+          "word": "plane",
+          "phonetic": "/pleɪn/",
+          "pos": "n.",
+          "meaning": "飞机",
+          "example": "The plane flies high.",
+          "example_cn": "飞机飞得很高。"
+        },
+        {
+          "word": "train",
+          "phonetic": "/treɪn/",
+          "pos": "n.",
+          "meaning": "火车",
+          "example": "The train is fast.",
+          "example_cn": "火车很快。"
+        },
+        {
+          "word": "boat",
+          "phonetic": "/bəʊt/",
+          "pos": "n.",
+          "meaning": "船",
+          "example": "The boat is on water.",
+          "example_cn": "船在水上。"
+        }
+      ]
+    },
+    {
+      "name": "颜色",
+      "icon": "🎨",
+      "words": [
+        {
+          "word": "red",
+          "phonetic": "/red/",
+          "pos": "adj.",
+          "meaning": "红色",
+          "example": "The apple is red.",
+          "example_cn": "苹果是红色的。"
+        },
+        {
+          "word": "blue",
+          "phonetic": "/bluː/",
+          "pos": "adj.",
+          "meaning": "蓝色",
+          "example": "The sky is blue.",
+          "example_cn": "天空是蓝色的。"
+        },
+        {
+          "word": "yellow",
+          "phonetic": "/ˈjeləʊ/",
+          "pos": "adj.",
+          "meaning": "黄色",
+          "example": "The banana is yellow.",
+          "example_cn": "香蕉是黄色的。"
+        },
+        {
+          "word": "green",
+          "phonetic": "/ɡriːn/",
+          "pos": "adj.",
+          "meaning": "绿色",
+          "example": "The grass is green.",
+          "example_cn": "草是绿色的。"
+        },
+        {
+          "word": "pink",
+          "phonetic": "/pɪŋk/",
+          "pos": "adj.",
+          "meaning": "粉色",
+          "example": "She likes pink.",
+          "example_cn": "她喜欢粉色。"
+        },
+        {
+          "word": "orange",
+          "phonetic": "/ˈɒrɪndʒ/",
+          "pos": "adj.",
+          "meaning": "橙色",
+          "example": "The orange is orange.",
+          "example_cn": "橙子是橙色的。"
+        }
+      ]
+    },
+    {
+      "name": "数字",
+      "icon": "🔢",
+      "words": [
+        {
+          "word": "one",
+          "phonetic": "/wʌn/",
+          "pos": "num.",
+          "meaning": "一",
+          "example": "I have one cat.",
+          "example_cn": "我有一只猫。"
+        },
+        {
+          "word": "two",
+          "phonetic": "/tuː/",
+          "pos": "num.",
+          "meaning": "二",
+          "example": "Two birds fly.",
+          "example_cn": "两只鸟在飞。"
+        },
+        {
+          "word": "three",
+          "phonetic": "/θriː/",
+          "pos": "num.",
+          "meaning": "三",
+          "example": "Three red apples.",
+          "example_cn": "三个红苹果。"
+        },
+        {
+          "word": "four",
+          "phonetic": "/fɔː/",
+          "pos": "num.",
+          "meaning": "四",
+          "example": "Four little ducks.",
+          "example_cn": "四只小鸭子。"
+        },
+        {
+          "word": "five",
+          "phonetic": "/faɪv/",
+          "pos": "num.",
+          "meaning": "五",
+          "example": "Five fingers on hand.",
+          "example_cn": "手上有五根手指。"
+        },
+        {
+          "word": "six",
+          "phonetic": "/sɪks/",
+          "pos": "num.",
+          "meaning": "六",
+          "example": "Six small stars.",
+          "example_cn": "六颗小星星。"
+        },
+        {
+          "word": "seven",
+          "phonetic": "/ˈsevn/",
+          "pos": "num.",
+          "meaning": "七",
+          "example": "Seven days a week.",
+          "example_cn": "一周有七天。"
+        },
+        {
+          "word": "eight",
+          "phonetic": "/eɪt/",
+          "pos": "num.",
+          "meaning": "八",
+          "example": "Eight big balloons.",
+          "example_cn": "八个大气球。"
+        },
+        {
+          "word": "nine",
+          "phonetic": "/naɪn/",
+          "pos": "num.",
+          "meaning": "九",
+          "example": "Nine little fish.",
+          "example_cn": "九条小鱼。"
+        },
+        {
+          "word": "ten",
+          "phonetic": "/ten/",
+          "pos": "num.",
+          "meaning": "十",
+          "example": "I can count to ten.",
+          "example_cn": "我能数到十。"
+        }
+      ]
+    },
+    {
+      "name": "家庭",
+      "icon": "👨‍👩‍👧‍👦",
+      "words": [
+        {
+          "word": "father",
+          "phonetic": "/ˈfɑːðə/",
+          "pos": "n.",
+          "meaning": "爸爸",
+          "example": "My father is tall.",
+          "example_cn": "我爸爸很高。"
+        },
+        {
+          "word": "mother",
+          "phonetic": "/ˈmʌðə/",
+          "pos": "n.",
+          "meaning": "妈妈",
+          "example": "Mother loves me.",
+          "example_cn": "妈妈爱我。"
+        },
+        {
+          "word": "brother",
+          "phonetic": "/ˈbrʌðə/",
+          "pos": "n.",
+          "meaning": "哥哥/弟弟",
+          "example": "My brother plays ball.",
+          "example_cn": "我哥哥玩球。"
+        },
+        {
+          "word": "sister",
+          "phonetic": "/ˈsɪstə/",
+          "pos": "n.",
+          "meaning": "姐姐/妹妹",
+          "example": "My sister sings.",
+          "example_cn": "我姐姐唱歌。"
+        },
+        {
+          "word": "grandpa",
+          "phonetic": "/ˈɡrænpɑː/",
+          "pos": "n.",
+          "meaning": "爷爷",
+          "example": "Grandpa tells stories.",
+          "example_cn": "爷爷讲故事。"
+        },
+        {
+          "word": "grandma",
+          "phonetic": "/ˈɡrænmɑː/",
+          "pos": "n.",
+          "meaning": "奶奶",
+          "example": "Grandma makes cookies.",
+          "example_cn": "奶奶做饼干。"
+        }
+      ]
+    },
+    {
+      "name": "身体",
+      "icon": "👀",
+      "words": [
+        {
+          "word": "head",
+          "phonetic": "/hed/",
+          "pos": "n.",
+          "meaning": "头",
+          "example": "Touch your head.",
+          "example_cn": "摸摸你的头。"
+        },
+        {
+          "word": "eye",
+          "phonetic": "/aɪ/",
+          "pos": "n.",
+          "meaning": "眼睛",
+          "example": "I have two eyes.",
+          "example_cn": "我有两只眼睛。"
+        },
+        {
+          "word": "ear",
+          "phonetic": "/ɪə/",
+          "pos": "n.",
+          "meaning": "耳朵",
+          "example": "Rabbit has long ears.",
+          "example_cn": "兔子有长耳朵。"
+        },
+        {
+          "word": "nose",
+          "phonetic": "/nəʊz/",
+          "pos": "n.",
+          "meaning": "鼻子",
+          "example": "I smell with my nose.",
+          "example_cn": "我用鼻子闻。"
+        },
+        {
+          "word": "mouth",
+          "phonetic": "/maʊθ/",
+          "pos": "n.",
+          "meaning": "嘴巴",
+          "example": "Open your mouth.",
+          "example_cn": "张开嘴巴。"
+        },
+        {
+          "word": "hand",
+          "phonetic": "/hænd/",
+          "pos": "n.",
+          "meaning": "手",
+          "example": "Wash your hands.",
+          "example_cn": "洗洗手。"
+        },
+        {
+          "word": "foot",
+          "phonetic": "/fʊt/",
+          "pos": "n.",
+          "meaning": "脚",
+          "example": "I walk on my feet.",
+          "example_cn": "我用脚走路。"
+        },
+        {
+          "word": "leg",
+          "phonetic": "/leɡ/",
+          "pos": "n.",
+          "meaning": "腿",
+          "example": "My legs are strong.",
+          "example_cn": "我的腿很有力。"
+        }
+      ]
+    },
+    {
+      "name": "食物",
+      "icon": "🍚",
+      "words": [
+        {
+          "word": "rice",
+          "phonetic": "/raɪs/",
+          "pos": "n.",
+          "meaning": "米饭",
+          "example": "I eat rice.",
+          "example_cn": "我吃米饭。"
+        },
+        {
+          "word": "bread",
+          "phonetic": "/bred/",
+          "pos": "n.",
+          "meaning": "面包",
+          "example": "Bread is soft.",
+          "example_cn": "面包很软。"
+        },
+        {
+          "word": "milk",
+          "phonetic": "/mɪlk/",
+          "pos": "n.",
+          "meaning": "牛奶",
+          "example": "Drink your milk.",
+          "example_cn": "喝牛奶。"
+        },
+        {
+          "word": "egg",
+          "phonetic": "/eɡ/",
+          "pos": "n.",
+          "meaning": "鸡蛋",
+          "example": "I eat an egg.",
+          "example_cn": "我吃一个鸡蛋。"
+        },
+        {
+          "word": "noodle",
+          "phonetic": "/ˈnuːdl/",
+          "pos": "n.",
+          "meaning": "面条",
+          "example": "Noodles are long.",
+          "example_cn": "面条长长的。"
+        },
+        {
+          "word": "cake",
+          "phonetic": "/keɪk/",
+          "pos": "n.",
+          "meaning": "蛋糕",
+          "example": "The cake is sweet.",
+          "example_cn": "蛋糕很甜。"
+        },
+        {
+          "word": "juice",
+          "phonetic": "/dʒuːs/",
+          "pos": "n.",
+          "meaning": "果汁",
+          "example": "Orange juice is good.",
+          "example_cn": "橙汁很好喝。"
+        }
+      ]
+    },
+    {
+      "name": "学校",
+      "icon": "🏫",
+      "words": [
+        {
+          "word": "book",
+          "phonetic": "/bʊk/",
+          "pos": "n.",
+          "meaning": "书",
+          "example": "This is my book.",
+          "example_cn": "这是我的书。"
+        },
+        {
+          "word": "pen",
+          "phonetic": "/pen/",
+          "pos": "n.",
+          "meaning": "钢笔",
+          "example": "I write with a pen.",
+          "example_cn": "我用钢笔写字。"
+        },
+        {
+          "word": "pencil",
+          "phonetic": "/ˈpensl/",
+          "pos": "n.",
+          "meaning": "铅笔",
+          "example": "The pencil is sharp.",
+          "example_cn": "铅笔很尖。"
+        },
+        {
+          "word": "bag",
+          "phonetic": "/bæɡ/",
+          "pos": "n.",
+          "meaning": "书包",
+          "example": "My bag is heavy.",
+          "example_cn": "我的书包很重。"
+        },
+        {
+          "word": "desk",
+          "phonetic": "/desk/",
+          "pos": "n.",
+          "meaning": "课桌",
+          "example": "My desk is clean.",
+          "example_cn": "我的课桌很干净。"
+        },
+        {
+          "word": "ruler",
+          "phonetic": "/ˈruːlə/",
+          "pos": "n.",
+          "meaning": "尺子",
+          "example": "I draw with a ruler.",
+          "example_cn": "我用尺子画线。"
+        }
+      ]
+    },
+    {
+      "name": "自然",
+      "icon": "🌈",
+      "words": [
+        {
+          "word": "sun",
+          "phonetic": "/sʌn/",
+          "pos": "n.",
+          "meaning": "太阳",
+          "example": "The sun is bright.",
+          "example_cn": "太阳很亮。"
+        },
+        {
+          "word": "moon",
+          "phonetic": "/muːn/",
+          "pos": "n.",
+          "meaning": "月亮",
+          "example": "The moon is round.",
+          "example_cn": "月亮圆圆的。"
+        },
+        {
+          "word": "star",
+          "phonetic": "/stɑː/",
+          "pos": "n.",
+          "meaning": "星星",
+          "example": "Stars twinkle at night.",
+          "example_cn": "星星在夜里闪烁。"
+        },
+        {
+          "word": "cloud",
+          "phonetic": "/klaʊd/",
+          "pos": "n.",
+          "meaning": "云",
+          "example": "The cloud is white.",
+          "example_cn": "云是白色的。"
+        },
+        {
+          "word": "rain",
+          "phonetic": "/reɪn/",
+          "pos": "n.",
+          "meaning": "雨",
+          "example": "I like the rain.",
+          "example_cn": "我喜欢下雨。"
+        },
+        {
+          "word": "flower",
+          "phonetic": "/ˈflaʊə/",
+          "pos": "n.",
+          "meaning": "花",
+          "example": "The flower is beautiful.",
+          "example_cn": "花很漂亮。"
+        },
+        {
+          "word": "tree",
+          "phonetic": "/triː/",
+          "pos": "n.",
+          "meaning": "树",
+          "example": "The tree is tall.",
+          "example_cn": "树很高。"
+        },
+        {
+          "word": "river",
+          "phonetic": "/ˈrɪvə/",
+          "pos": "n.",
+          "meaning": "河流",
+          "example": "The river is long.",
+          "example_cn": "河流很长。"
+        }
+      ]
+    },
+    {
+      "name": "天气",
+      "icon": "🌤️",
+      "words": [
+        {
+          "word": "sunny",
+          "phonetic": "/ˈsʌni/",
+          "pos": "adj.",
+          "meaning": "晴朗的",
+          "example": "It's a sunny day.",
+          "example_cn": "今天是晴天。"
+        },
+        {
+          "word": "rainy",
+          "phonetic": "/ˈreɪni/",
+          "pos": "adj.",
+          "meaning": "下雨的",
+          "example": "It's a rainy day.",
+          "example_cn": "今天是雨天。"
+        },
+        {
+          "word": "cloudy",
+          "phonetic": "/ˈklaʊdi/",
+          "pos": "adj.",
+          "meaning": "多云的",
+          "example": "It's cloudy today.",
+          "example_cn": "今天多云。"
+        },
+        {
+          "word": "windy",
+          "phonetic": "/ˈwɪndi/",
+          "pos": "adj.",
+          "meaning": "有风的",
+          "example": "It's windy outside.",
+          "example_cn": "外面有风。"
+        },
+        {
+          "word": "snowy",
+          "phonetic": "/ˈsnəʊi/",
+          "pos": "adj.",
+          "meaning": "下雪的",
+          "example": "It's a snowy day.",
+          "example_cn": "今天是下雪天。"
+        }
+      ]
+    },
+    {
+      "name": "季节",
+      "icon": "🍂",
+      "words": [
+        {
+          "word": "spring",
+          "phonetic": "/sprɪŋ/",
+          "pos": "n.",
+          "meaning": "春天",
+          "example": "Flowers bloom in spring.",
+          "example_cn": "春天花开。"
+        },
+        {
+          "word": "summer",
+          "phonetic": "/ˈsʌmə/",
+          "pos": "n.",
+          "meaning": "夏天",
+          "example": "Summer is hot.",
+          "example_cn": "夏天很热。"
+        },
+        {
+          "word": "autumn",
+          "phonetic": "/ˈɔːtəm/",
+          "pos": "n.",
+          "meaning": "秋天",
+          "example": "Leaves fall in autumn.",
+          "example_cn": "秋天落叶。"
+        },
+        {
+          "word": "winter",
+          "phonetic": "/ˈwɪntə/",
+          "pos": "n.",
+          "meaning": "冬天",
+          "example": "Winter is cold.",
+          "example_cn": "冬天很冷。"
+        }
+      ]
+    },
+    {
+      "name": "衣物",
+      "icon": "👕",
+      "words": [
+        {
+          "word": "shirt",
+          "phonetic": "/ʃɜːt/",
+          "pos": "n.",
+          "meaning": "衬衫",
+          "example": "I wear a shirt.",
+          "example_cn": "我穿衬衫。"
+        },
+        {
+          "word": "pants",
+          "phonetic": "/pænts/",
+          "pos": "n.",
+          "meaning": "裤子",
+          "example": "My pants are blue.",
+          "example_cn": "我的裤子是蓝色的。"
+        },
+        {
+          "word": "shoes",
+          "phonetic": "/ʃuːz/",
+          "pos": "n.",
+          "meaning": "鞋子",
+          "example": "Put on your shoes.",
+          "example_cn": "穿上鞋子。"
+        },
+        {
+          "word": "hat",
+          "phonetic": "/hæt/",
+          "pos": "n.",
+          "meaning": "帽子",
+          "example": "I wear a hat.",
+          "example_cn": "我戴帽子。"
+        },
+        {
+          "word": "dress",
+          "phonetic": "/dres/",
+          "pos": "n.",
+          "meaning": "裙子",
+          "example": "She wears a dress.",
+          "example_cn": "她穿裙子。"
+        },
+        {
+          "word": "socks",
+          "phonetic": "/sɒks/",
+          "pos": "n.",
+          "meaning": "袜子",
+          "example": "My socks are white.",
+          "example_cn": "我的袜子是白色的。"
+        }
+      ]
+    },
+    {
+      "name": "玩具",
+      "icon": "🧸",
+      "words": [
+        {
+          "word": "ball",
+          "phonetic": "/bɔːl/",
+          "pos": "n.",
+          "meaning": "球",
+          "example": "Kick the ball.",
+          "example_cn": "踢球。"
+        },
+        {
+          "word": "doll",
+          "phonetic": "/dɒl/",
+          "pos": "n.",
+          "meaning": "洋娃娃",
+          "example": "She has a doll.",
+          "example_cn": "她有一个洋娃娃。"
+        },
+        {
+          "word": "kite",
+          "phonetic": "/kaɪt/",
+          "pos": "n.",
+          "meaning": "风筝",
+          "example": "Fly a kite.",
+          "example_cn": "放风筝。"
+        },
+        {
+          "word": "robot",
+          "phonetic": "/ˈrəʊbɒt/",
+          "pos": "n.",
+          "meaning": "机器人",
+          "example": "The robot moves.",
+          "example_cn": "机器人会动。"
+        },
+        {
+          "word": "puzzle",
+          "phonetic": "/ˈpʌzl/",
+          "pos": "n.",
+          "meaning": "拼图",
+          "example": "I like puzzles.",
+          "example_cn": "我喜欢拼图。"
+        }
+      ]
+    },
+    {
+      "name": "运动",
+      "icon": "⚽",
+      "words": [
+        {
+          "word": "run",
+          "phonetic": "/rʌn/",
+          "pos": "v.",
+          "meaning": "跑",
+          "example": "I can run fast.",
+          "example_cn": "我能跑很快。"
+        },
+        {
+          "word": "swim",
+          "phonetic": "/swɪm/",
+          "pos": "v.",
+          "meaning": "游泳",
+          "example": "I swim in summer.",
+          "example_cn": "我夏天游泳。"
+        },
+        {
+          "word": "jump",
+          "phonetic": "/dʒʌmp/",
+          "pos": "v.",
+          "meaning": "跳",
+          "example": "Jump up high.",
+          "example_cn": "跳高。"
+        },
+        {
+          "word": "dance",
+          "phonetic": "/dɑːns/",
+          "pos": "v.",
+          "meaning": "跳舞",
+          "example": "She loves to dance.",
+          "example_cn": "她爱跳舞。"
+        },
+        {
+          "word": "sing",
+          "phonetic": "/sɪŋ/",
+          "pos": "v.",
+          "meaning": "唱歌",
+          "example": "Birds can sing.",
+          "example_cn": "鸟会唱歌。"
+        }
+      ]
+    },
+    {
+      "name": "职业",
+      "icon": "👨‍⚕️",
+      "words": [
+        {
+          "word": "doctor",
+          "phonetic": "/ˈdɒktə/",
+          "pos": "n.",
+          "meaning": "医生",
+          "example": "The doctor helps people.",
+          "example_cn": "医生帮助人。"
+        },
+        {
+          "word": "teacher",
+          "phonetic": "/ˈtiːtʃə/",
+          "pos": "n.",
+          "meaning": "老师",
+          "example": "The teacher teaches.",
+          "example_cn": "老师教书。"
+        },
+        {
+          "word": "farmer",
+          "phonetic": "/ˈfɑːmə/",
+          "pos": "n.",
+          "meaning": "农民",
+          "example": "The farmer grows rice.",
+          "example_cn": "农民种水稻。"
+        },
+        {
+          "word": "driver",
+          "phonetic": "/ˈdraɪvə/",
+          "pos": "n.",
+          "meaning": "司机",
+          "example": "The driver drives a bus.",
+          "example_cn": "司机开公交车。"
+        },
+        {
+          "word": "cook",
+          "phonetic": "/kʊk/",
+          "pos": "n.",
+          "meaning": "厨师",
+          "example": "The cook makes food.",
+          "example_cn": "厨师做饭。"
+        },
+        {
+          "word": "nurse",
+          "phonetic": "/nɜːs/",
+          "pos": "n.",
+          "meaning": "护士",
+          "example": "The nurse is kind.",
+          "example_cn": "护士很亲切。"
+        }
+      ]
+    },
+    {
+      "name": "星期",
+      "icon": "📅",
+      "words": [
+        {
+          "word": "Monday",
+          "phonetic": "/ˈmʌndeɪ/",
+          "pos": "n.",
+          "meaning": "星期一",
+          "example": "School starts on Monday.",
+          "example_cn": "星期一开学。"
+        },
+        {
+          "word": "Tuesday",
+          "phonetic": "/ˈtjuːzdeɪ/",
+          "pos": "n.",
+          "meaning": "星期二",
+          "example": "Tuesday comes after Monday.",
+          "example_cn": "星期二在星期一之后。"
+        },
+        {
+          "word": "Wednesday",
+          "phonetic": "/ˈwenzdeɪ/",
+          "pos": "n.",
+          "meaning": "星期三",
+          "example": "Wednesday is the middle.",
+          "example_cn": "星期三是中间。"
+        },
+        {
+          "word": "Thursday",
+          "phonetic": "/ˈθɜːzdeɪ/",
+          "pos": "n.",
+          "meaning": "星期四",
+          "example": "Thursday is almost Friday.",
+          "example_cn": "星期四快到星期五了。"
+        },
+        {
+          "word": "Friday",
+          "phonetic": "/ˈfraɪdeɪ/",
+          "pos": "n.",
+          "meaning": "星期五",
+          "example": "Friday is the last school day.",
+          "example_cn": "星期五是最后一个上学日。"
+        },
+        {
+          "word": "Saturday",
+          "phonetic": "/ˈsætədeɪ/",
+          "pos": "n.",
+          "meaning": "星期六",
+          "example": "Saturday is for fun.",
+          "example_cn": "星期六可以玩。"
+        },
+        {
+          "word": "Sunday",
+          "phonetic": "/ˈsʌndeɪ/",
+          "pos": "n.",
+          "meaning": "星期日",
+          "example": "Sunday is a rest day.",
+          "example_cn": "星期日是休息日。"
+        }
+      ]
+    },
+    {
+      "name": "形状",
+      "icon": "⭐",
+      "words": [
+        {
+          "word": "circle",
+          "phonetic": "/ˈsɜːkl/",
+          "pos": "n.",
+          "meaning": "圆形",
+          "example": "The sun is a circle.",
+          "example_cn": "太阳是圆形的。"
+        },
+        {
+          "word": "square",
+          "phonetic": "/skweə/",
+          "pos": "n.",
+          "meaning": "正方形",
+          "example": "The box is a square.",
+          "example_cn": "盒子是正方形的。"
+        },
+        {
+          "word": "triangle",
+          "phonetic": "/ˈtraɪæŋɡl/",
+          "pos": "n.",
+          "meaning": "三角形",
+          "example": "The roof is a triangle.",
+          "example_cn": "屋顶是三角形的。"
+        },
+        {
+          "word": "star",
+          "phonetic": "/stɑː/",
+          "pos": "n.",
+          "meaning": "星形",
+          "example": "Draw a star shape.",
+          "example_cn": "画一个星形。"
+        },
+        {
+          "word": "heart",
+          "phonetic": "/hɑːt/",
+          "pos": "n.",
+          "meaning": "心形",
+          "example": "I draw a heart.",
+          "example_cn": "我画一个心形。"
+        }
+      ]
+    }
+  ]
+}

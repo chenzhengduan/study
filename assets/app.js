@@ -26,7 +26,8 @@
   var state = {
     pinyin: store.get("pinyin", "1") === "1",
     vertical: store.get("vertical", "0") === "1",
-    fontSize: parseInt(store.get("fontSize", "21"), 10) || 21
+    fontSize: parseInt(store.get("fontSize", "21"), 10) || 21,
+    subject: store.get("subject", "zh")
   };
 
   /* ---------- 工具 ---------- */
@@ -40,6 +41,16 @@
     return getJSON(DATA_BASE + grade + ".json").then(function (d) { cache[grade] = d; return d; });
   }
   function loadIndex() { return getJSON(DATA_BASE + "index.json"); }
+
+  /* ---------- 英语数据 ---------- */
+  function loadEnWords() {
+    if (cache["en:words"]) return Promise.resolve(cache["en:words"]);
+    return getJSON(DATA_BASE + "en/words.json").then(function (d) { cache["en:words"] = d; return d; });
+  }
+  function loadEnSentences() {
+    if (cache["en:sentences"]) return Promise.resolve(cache["en:sentences"]);
+    return getJSON(DATA_BASE + "en/sentences.json").then(function (d) { cache["en:sentences"] = d; return d; });
+  }
 
   function buildSearchIndex() {
     if (searchIndex) return Promise.resolve(searchIndex);
@@ -172,8 +183,116 @@
     return Object.keys(set).length;
   }
 
-  /* ===== 首页 ===== */
+  /* ===== 学科切换 ===== */
+  function subjectSwitchHtml() {
+    return '<div class="subject-switch">' +
+      '<button class="subject-switch__btn' + (state.subject === "zh" ? " is-active" : "") + '" data-subject="zh">语文</button>' +
+      '<button class="subject-switch__btn' + (state.subject === "en" ? " is-active" : "") + '" data-subject="en">英语</button>' +
+      "</div>";
+  }
+  function bindSubjectSwitch() {
+    view.querySelectorAll(".subject-switch__btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var s = btn.getAttribute("data-subject");
+        if (s === state.subject) return;
+        state.subject = s; store.set("subject", s);
+        renderHome();
+      });
+    });
+  }
+
+  /* ===== 首页（学科分发） ===== */
   function renderHome() {
+    if (state.subject === "en") return renderEnHome();
+    renderZhHome();
+  }
+
+  /* ===== 英语首页 ===== */
+  function renderEnHome() {
+    loading();
+    Promise.all([loadEnWords(), loadEnSentences()]).then(function (res) {
+      var words = res[0], sents = res[1];
+      var wordTotal = 0, sentTotal = 0;
+      words.categories.forEach(function (c) { wordTotal += c.words.length; });
+      sents.categories.forEach(function (c) { sentTotal += c.sentences.length; });
+
+      function catCard(c, type) {
+        var n = c.words ? c.words.length : c.sentences.length;
+        return '<a class="en-cat" href="#/en/' + type + "/" + enc(c.name) + '">' +
+          '<span class="en-cat__icon">' + c.icon + "</span>" +
+          '<span class="en-cat__body"><strong>' + esc(c.name) + "</strong>" +
+          "<small>" + n + (type === "w" ? " 个单词" : " 个句子") + "</small></span>" +
+          '<span class="en-cat__arrow">›</span></a>';
+      }
+
+      var wordCats = words.categories.map(function (c) { return catCard(c, "w"); }).join("");
+      var sentCats = sents.categories.map(function (c) { return catCard(c, "s"); }).join("");
+
+      show(
+        subjectSwitchHtml() +
+        '<section class="hero hero--en"><p class="hero__kicker">ENGLISH LEARNING</p><h1>英语启蒙</h1>' +
+        '<p class="hero__desc">按主题学单词，按场景学句子。' + wordTotal + " 个单词 · " + sentTotal + " 个句子，专为小朋友设计。</p></section>" +
+
+        '<section class="sec"><div class="sec__head"><div><p class="sec__eyebrow">WORDS</p><h2>主题单词</h2></div><p>' + wordTotal + " 词</p></div>" +
+        '<div class="en-cat-grid">' + wordCats + "</div></section>" +
+
+        '<section class="sec"><div class="sec__head"><div><p class="sec__eyebrow">SENTENCES</p><h2>场景句子</h2></div><p>' + sentTotal + " 句</p></div>" +
+        '<div class="en-cat-grid">' + sentCats + "</div></section>",
+        "home"
+      );
+      bindSubjectSwitch();
+    }).catch(function () { errView("英语数据加载失败"); });
+  }
+
+  /* ===== 英语分类详情 ===== */
+  function renderEnWordCat(catName) {
+    loading();
+    loadEnWords().then(function (data) {
+      var cat = null;
+      data.categories.forEach(function (c) { if (c.name === catName) cat = c; });
+      if (!cat) { errView("未找到分类「" + catName + "」"); return; }
+      var cards = cat.words.map(function (w) {
+        return '<div class="en-word">' +
+          '<div class="en-word__head"><span class="en-word__text">' + esc(w.word) + "</span>" +
+          '<span class="en-word__phonetic">' + esc(w.phonetic) + "</span></div>" +
+          '<div class="en-word__meta"><span class="en-word__pos">' + esc(w.pos) + "</span>" +
+          '<span class="en-word__meaning">' + esc(w.meaning) + "</span></div>" +
+          '<div class="en-word__example"><span class="en-word__ex-en">' + esc(w.example) + "</span>" +
+          '<span class="en-word__ex-cn">' + esc(w.example_cn) + "</span></div>" +
+          "</div>";
+      }).join("");
+      show(
+        '<div class="crumbs"><a href="#/">首页</a><i>›</i><a href="#/">英语</a><i>›</i><span>' + esc(cat.name) + "</span></div>" +
+        '<section class="en-detail"><div class="en-detail__head"><span class="en-detail__icon">' + cat.icon + "</span>" +
+        "<h1>" + esc(cat.name) + '</h1><span class="en-detail__count">' + cat.words.length + " 词</span></div>" +
+        '<div class="en-word-list">' + cards + "</div></section>",
+        ""
+      );
+    }).catch(function () { errView("数据加载失败"); });
+  }
+
+  function renderEnSentCat(catName) {
+    loading();
+    loadEnSentences().then(function (data) {
+      var cat = null;
+      data.categories.forEach(function (c) { if (c.name === catName) cat = c; });
+      if (!cat) { errView("未找到分类「" + catName + "」"); return; }
+      var cards = cat.sentences.map(function (s) {
+        return '<div class="en-sent"><span class="en-sent__en">' + esc(s.en) + "</span>" +
+          '<span class="en-sent__cn">' + esc(s.cn) + "</span></div>";
+      }).join("");
+      show(
+        '<div class="crumbs"><a href="#/">首页</a><i>›</i><a href="#/">英语</a><i>›</i><span>' + esc(cat.name) + "</span></div>" +
+        '<section class="en-detail"><div class="en-detail__head"><span class="en-detail__icon">' + cat.icon + "</span>" +
+        "<h1>" + esc(cat.name) + '</h1><span class="en-detail__count">' + cat.sentences.length + " 句</span></div>" +
+        '<div class="en-sent-list">' + cards + "</div></section>",
+        ""
+      );
+    }).catch(function () { errView("数据加载失败"); });
+  }
+
+  /* ===== 语文首页 ===== */
+  function renderZhHome() {
     loading();
     Promise.all([loadIndex()].concat(GRADE_ORDER.map(function (g) { return loadGrade(g[0]).catch(function () { return null; }); })))
       .then(function (res) {
@@ -224,6 +343,7 @@
         function stat(n, l) { return '<div class="stat"><b>' + n + "</b><span>" + l + "</span></div>"; }
 
         show(
+          subjectSwitchHtml() +
           '<section class="hero"><p class="hero__kicker">CLASSICAL POEMS</p><h1>古诗诵读</h1>' +
           '<p class="hero__desc">从幼儿园到高中，一首一页。按年级、诗人、朝代、类型、主题查找，支持拼音标注、竖排诵读、译文、注释与赏析，专为手机诵读而生。</p>' +
           '<div class="hero__badges"><span>一首一页</span><span>拼音标注</span><span>竖排诵读</span><span>多维度筛选</span><span>移动端优先</span></div></section>' +
@@ -244,6 +364,8 @@
           "home"
         );
 
+        // 学科切换
+        bindSubjectSwitch();
         // 移动端底部弹层：选择年级
         var sheetBtn = document.getElementById("grade-sheet-open");
         if (sheetBtn) {
@@ -669,6 +791,9 @@
     if (!parts.length) return renderHome();
     if (parts[0] === "g" && parts[1]) return renderGrade(parts[1], qs);
     if (parts[0] === "p" && parts[1] && parts[2]) return renderPoem(parts[1], parts[2]);
+    if (parts[0] === "en" && parts[1] === "w" && parts[2]) return renderEnWordCat(parts[2]);
+    if (parts[0] === "en" && parts[1] === "s" && parts[2]) return renderEnSentCat(parts[2]);
+    if (parts[0] === "en") return renderEnHome();
     if (parts[0] === "search") return renderSearch(qs);
     renderHome();
   }
